@@ -1,0 +1,102 @@
+@if (product(); as item) {
+  <section class="detail">
+    <div class="gallery">
+      <div class="gallery__image">
+        <img [src]="selectedImage() || item.gallery[0]" [alt]="item.name" />
+      </div>
+      <div class="gallery__thumbs" aria-label="Product images">
+        @for (image of item.gallery; track image) {
+          <button
+            type="button"
+            (click)="selectImage(image)"
+            [class.is-active]="(selectedImage() || item.gallery[0]) === image"
+          >
+            <img [src]="image" [alt]="item.name + ' view ' + ($index + 1)" />
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="summary">
+      @if (item.badge; as badge) {
+        <app-badge>{{ badge }}</app-badge>
+      }
+      <h1>{{ item.name }}</h1>
+      <span class="summary__category">{{ item.categoryName }}</span>
+      <app-rating [rating]="item.rating" [reviewCount]="item.reviewCount" />
+      <p>{{ item.description }}</p>
+      <app-price [amount]="item.price" [compareAt]="item.originalPrice" />
+
+      <div class="stock" [class.stock--out]="item.stock === 0">
+        {{ item.stock > 0 ? item.stockStatus + ' - ' + item.stock + ' available' : item.stockStatus }}
+      </div>
+
+      <div class="variants">
+        <h2>{{ item.variants[0].label }}</h2>
+        <div>
+          @for (variant of item.variants; track variant.id) {
+            <button
+              type="button"
+              [disabled]="!variant.inStock"
+              [class.is-active]="(selectedVariantId() || item.variants[0].id) === variant.id"
+              (click)="selectVariant(variant.id)"
+            >
+              {{ variant.value }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="purchase">
+        <app-quantity-selector
+          [value]="quantity()"
+          [max]="item.stock || 1"
+          (valueChange)="updateQuantity($event)"
+        />
+        <button class="button" type="button" (click)="addToCart()" [disabled]="item.stock === 0">
+          Add to cart
+        </button>
+      </div>
+
+      <div class="info-grid">
+        <div>
+          <strong>Delivery</strong>
+          <span>Free 2-4 day shipping over $150</span>
+        </div>
+        <div>
+          <strong>Payment</strong>
+          <span>Secure card, wallet, and gift card UI</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="specs">
+    <h2>Product overview</h2>
+    <p>{{ item.longDescription }}</p>
+
+    <h2>Product specs</h2>
+    <dl>
+      @for (spec of item.specs; track spec.label) {
+        <div>
+          <dt>{{ spec.label }}</dt>
+          <dd>{{ spec.value }}</dd>
+        </div>
+      }
+    </dl>
+  </section>
+
+  @if (relatedProducts().length > 0) {
+    <section class="related">
+      <h2>Related products</h2>
+      <app-product-grid [products]="relatedProducts()" />
+    </section>
+  }
+} @else {
+  <app-empty-state
+    title="Product not found"
+    message="This product may have moved or is no longer available."
+  >
+    <a class="button" routerLink="/products">Back to products</a>
+  </app-empty-state>
+}

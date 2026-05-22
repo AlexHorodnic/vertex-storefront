@@ -1,0 +1,60 @@
+<section class="products-page">
+  <app-section-header
+    eyebrow="Catalog"
+    title="Curated premium electronics for modern work."
+    description="Browse fictional flagship devices, desk gear, audio, charging, and accessories with clean typed catalog data."
+  />
+
+  <form class="filters" aria-label="Product filters">
+    <label>
+      <span>Search</span>
+      <input
+        type="search"
+        placeholder="Search laptops, monitors, chargers"
+        [ngModel]="filters().searchTerm"
+        name="search"
+        (ngModelChange)="updateSearch($event)"
+      />
+    </label>
+
+    <label>
+      <span>Category</span>
+      <select
+        [ngModel]="filters().categoryId"
+        name="category"
+        (ngModelChange)="updateCategory($event)"
+      >
+        <option value="all">All categories</option>
+        @for (category of categories(); track category.id) {
+          <option [value]="category.id">{{ category.name }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      <span>Sort</span>
+      <select [ngModel]="filters().sort" name="sort" (ngModelChange)="updateSort($event)">
+        <option value="featured">Featured</option>
+        <option value="price-low">Price: low to high</option>
+        <option value="price-high">Price: high to low</option>
+        <option value="rating">Top rated</option>
+      </select>
+    </label>
+  </form>
+
+  @if (isLoading()) {
+    <div class="skeleton-grid" aria-live="polite">
+      @for (item of [1, 2, 3, 4]; track item) {
+        <app-skeleton-card />
+      }
+    </div>
+  } @else if (filteredProducts().length > 0) {
+    <p class="products-page__count">{{ filteredProducts().length }} products found</p>
+    <app-product-grid [products]="filteredProducts()" />
+  } @else {
+    <app-empty-state
+      title="No matching products"
+      message="Try a broader search term or choose a different category."
+    />
+  }
+</section>

@@ -1,0 +1,32 @@
+.empty-state {
+  display: grid;
+  min-height: 22rem;
+  align-content: center;
+  justify-items: center;
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.empty-state__mark {
+  display: grid;
+  width: 4rem;
+  height: 4rem;
+  margin-bottom: 1rem;
+  border-radius: 50%;
+  background: var(--color-surface-strong);
+  color: var(--color-accent);
+  font-size: 2rem;
+  place-items: center;
+}
+
+h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 5vw, 2.7rem);
+}
+
+p {
+  max-width: 34rem;
+  margin: 0.8rem 0 0;
+  color: var(--color-muted);
+  line-height: 1.7;
+}

@@ -1,0 +1,68 @@
+@if (cartService.isDrawerOpen()) {
+  <button
+    class="cart-backdrop"
+    type="button"
+    aria-label="Close cart drawer"
+    (click)="close()"
+  ></button>
+}
+
+<aside
+  class="cart-drawer"
+  [class.cart-drawer--open]="cartService.isDrawerOpen()"
+  aria-label="Shopping cart"
+>
+  <header class="cart-drawer__header">
+    <div>
+      <p>Your cart</p>
+      <h2>{{ cartService.totals().itemCount }} items</h2>
+    </div>
+    <button class="icon-button" type="button" aria-label="Close cart drawer" (click)="close()">
+      ×
+    </button>
+  </header>
+
+  @if (cartService.items().length > 0) {
+    <div class="cart-drawer__items">
+      @for (item of cartService.items(); track item.product.id + item.variantId) {
+        <article class="cart-item">
+          <img [src]="item.product.imageUrl" [alt]="item.product.name" />
+          <div>
+            <h3>{{ item.product.name }}</h3>
+            <p>{{ variantLabel(item) }}</p>
+            <strong>{{ item.product.price | currency: 'USD' : 'symbol' : '1.0-0' }}</strong>
+            <div class="cart-item__actions">
+              <app-quantity-selector
+                [value]="item.quantity"
+                [max]="item.product.stock"
+                [label]="'Quantity for ' + item.product.name"
+                (valueChange)="updateQuantity(item.product.id, item.variantId, $event)"
+              />
+              <button type="button" (click)="remove(item.product.id, item.variantId)">
+                Remove
+              </button>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+
+    <footer class="cart-drawer__footer">
+      <div>
+        <span>Subtotal</span>
+        <strong>{{ cartService.totals().subtotal | currency: 'USD' : 'symbol' : '1.0-0' }}</strong>
+      </div>
+      <button class="button" type="button">Checkout</button>
+      <button class="button button--ghost" type="button" (click)="cartService.clearCart()">
+        Clear cart
+      </button>
+    </footer>
+  } @else {
+    <app-empty-state
+      title="Your cart is empty"
+      message="Add a product to compare fit, finish, and delivery details before checkout."
+    >
+      <a class="button" routerLink="/products" (click)="close()">Shop products</a>
+    </app-empty-state>
+  }
+</aside>

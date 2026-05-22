@@ -1,0 +1,41 @@
+.skeleton {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.skeleton__image,
+.skeleton__line {
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-strong),
+    #f5f0e9,
+    var(--color-surface-strong)
+  );
+  background-size: 220% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+.skeleton__image {
+  aspect-ratio: 4 / 5;
+}
+
+.skeleton__line {
+  height: 0.9rem;
+  width: 72%;
+}
+
+.skeleton__line--wide {
+  width: 92%;
+}
+
+.skeleton__line--short {
+  width: 42%;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -220% 0;
+  }
+}

@@ -1,0 +1,19 @@
+<div class="quantity" [attr.aria-label]="label()">
+  <button
+    type="button"
+    (click)="decrease()"
+    [disabled]="value() <= min()"
+    aria-label="Decrease quantity"
+  >
+    −
+  </button>
+  <span aria-live="polite">{{ value() }}</span>
+  <button
+    type="button"
+    (click)="increase()"
+    [disabled]="value() >= max()"
+    aria-label="Increase quantity"
+  >
+    +
+  </button>
+</div>

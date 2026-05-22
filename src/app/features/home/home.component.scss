@@ -1,0 +1,163 @@
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(20rem, 1.1fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: center;
+  padding: clamp(2rem, 5vw, 4.5rem) var(--page-gutter);
+}
+
+.hero__content {
+  max-width: 42rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.85rem;
+  color: var(--color-accent);
+  font-size: 0.78rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(3rem, 8vw, 6.8rem);
+  line-height: 0.94;
+}
+
+.hero__content > p:not(.eyebrow) {
+  max-width: 36rem;
+  margin: 1.25rem 0 0;
+  color: var(--color-muted);
+  font-size: 1.1rem;
+  line-height: 1.75;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.hero__media {
+  overflow: hidden;
+  min-height: 32rem;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-elevated);
+}
+
+.hero__media img,
+.category-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.page-section {
+  padding: clamp(3rem, 7vw, 5.5rem) var(--page-gutter);
+}
+
+.page-section--muted {
+  background: var(--color-surface-muted);
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.category-card {
+  position: relative;
+  display: grid;
+  min-height: 24rem;
+  align-content: end;
+  overflow: hidden;
+  padding: 1.25rem;
+  border-radius: var(--radius-lg);
+  color: #fff;
+  text-decoration: none;
+}
+
+.category-card::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.72));
+}
+
+.category-card img {
+  position: absolute;
+  inset: 0;
+  transition: transform 260ms ease;
+}
+
+.category-card:hover img {
+  transform: scale(1.04);
+}
+
+.category-card span,
+.category-card h3,
+.category-card p {
+  position: relative;
+  z-index: 1;
+}
+
+.category-card span {
+  font-weight: 800;
+}
+
+.category-card h3 {
+  margin: 0.45rem 0;
+  font-size: 1.65rem;
+}
+
+.category-card p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.promo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  margin: clamp(3rem, 7vw, 5.5rem) var(--page-gutter);
+  padding: clamp(2rem, 5vw, 3.5rem);
+  border-radius: var(--radius-xl);
+  background: var(--color-text);
+  color: #fff;
+}
+
+.promo h2 {
+  max-width: 48rem;
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 1;
+}
+
+.promo .button {
+  background: #fff;
+  color: var(--color-text);
+}
+
+@media (max-width: 900px) {
+  .hero,
+  .category-grid,
+  .promo {
+    grid-template-columns: 1fr;
+  }
+
+  .hero__media {
+    min-height: 22rem;
+  }
+
+  .category-grid {
+    display: grid;
+  }
+
+  .promo {
+    align-items: start;
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,17 @@
+<header class="section-header">
+  <div>
+    @if (eyebrow(); as eyebrowText) {
+      <p class="section-header__eyebrow">{{ eyebrowText }}</p>
+    }
+    <h2>{{ title() }}</h2>
+    @if (description(); as copy) {
+      <p class="section-header__description">{{ copy }}</p>
+    }
+  </div>
+
+  @if (linkLabel(); as label) {
+    @if (linkUrl(); as url) {
+      <a class="section-header__link" [routerLink]="url">{{ label }}</a>
+    }
+  }
+</header>

@@ -1,0 +1,28 @@
+<header class="site-header">
+  <a class="site-header__brand" routerLink="/" aria-label="Vertex Circuit home">
+    <span aria-hidden="true">V</span>
+    Vertex Circuit
+  </a>
+
+  <nav aria-label="Primary navigation">
+    @for (item of navigation; track item.path) {
+      <a
+        [routerLink]="item.path"
+        routerLinkActive="is-active"
+        [routerLinkActiveOptions]="{ exact: item.path === '/' }"
+      >
+        {{ item.label }}
+      </a>
+    }
+  </nav>
+
+  <button
+    class="site-header__cart"
+    type="button"
+    (click)="cartService.openDrawer()"
+    aria-label="Open cart"
+  >
+    Cart
+    <span>{{ cartService.totals().itemCount }}</span>
+  </button>
+</header>

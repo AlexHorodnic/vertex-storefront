@@ -1,0 +1,62 @@
+<section class="hero">
+  <div class="hero__content">
+    <p class="eyebrow">Premium tech storefront</p>
+    <h1>Vertex Circuit</h1>
+    <p>
+      A curated electronics shop for flagship laptops, displays, audio, desk gear, and charging
+      essentials with a production-grade Angular storefront experience.
+    </p>
+    <div class="hero__actions">
+      <a class="button" routerLink="/products">Shop premium tech</a>
+      <a class="button button--ghost" routerLink="/products">View new arrivals</a>
+    </div>
+  </div>
+  <div class="hero__media" aria-label="Premium electronics setup">
+    <img
+      src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1400&q=80"
+      alt="Premium laptop and electronics setup"
+    />
+  </div>
+</section>
+
+<section class="page-section">
+  <app-section-header
+    eyebrow="Shop by category"
+    title="A focused assortment with premium range."
+    description="Ten electronics categories keep the catalog realistic, scalable, and easy to merchandise."
+  />
+
+  <div class="category-grid">
+    @for (category of productService.categories(); track category.id) {
+      <a
+        class="category-card"
+        [routerLink]="['/products']"
+        [queryParams]="{ category: category.id }"
+      >
+        <img [src]="category.imageUrl" [alt]="category.name" loading="lazy" />
+        <span>{{ category.productCount }} products</span>
+        <h3>{{ category.name }}</h3>
+        <p>{{ category.description }}</p>
+      </a>
+    }
+  </div>
+</section>
+
+<section class="page-section page-section--muted">
+  <app-section-header
+    eyebrow="Featured"
+    title="Recruiter-ready product merchandising."
+    description="Typed product data, reusable commerce UI, accessible actions, and responsive catalog behavior."
+    linkLabel="Browse all"
+    linkUrl="/products"
+  />
+  <app-product-grid [products]="productService.featuredProducts()" />
+</section>
+
+<section class="promo">
+  <div>
+    <p class="eyebrow">Launch edit</p>
+    <h2>Build a premium workstation from laptops to charging in one polished catalog.</h2>
+  </div>
+  <a class="button" routerLink="/products">Browse the edit</a>
+</section>

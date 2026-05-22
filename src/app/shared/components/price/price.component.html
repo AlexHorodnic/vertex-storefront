@@ -1,0 +1,7 @@
+<span class="price">
+  <span class="price__current">{{ amount() | currency: currency() : 'symbol' : '1.0-0' }}</span>
+
+  @if (compareAt(); as oldPrice) {
+    <span class="price__compare">{{ oldPrice | currency: currency() : 'symbol' : '1.0-0' }}</span>
+  }
+</span>

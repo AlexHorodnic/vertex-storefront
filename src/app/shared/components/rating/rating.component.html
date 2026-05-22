@@ -1,0 +1,8 @@
+<span
+  class="rating"
+  [attr.aria-label]="'Rated ' + rating() + ' out of 5 from ' + reviewCount() + ' reviews'"
+>
+  <span class="rating__star" aria-hidden="true">★</span>
+  <span>{{ rating() | number: '1.1-1' }}</span>
+  <span class="rating__count">({{ reviewCount() }})</span>
+</span>
