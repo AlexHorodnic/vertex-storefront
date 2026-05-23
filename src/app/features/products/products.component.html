@@ -2,167 +2,228 @@
   <app-section-header
     eyebrow="Catalog"
     title="Curated premium electronics for modern work."
-    description="Browse fictional flagship devices, desk gear, audio, charging, and accessories with clean typed catalog data."
+    description="Explore refined devices, desk gear, audio, charging, and accessories selected for focused modern setups."
   />
 
-  <form class="filters" aria-label="Product filters">
-    <div class="filter-group filter-group--categories">
-      <span>Category</span>
-      <div class="category-chips" aria-label="Category filters">
-        @for (category of categoryFilters; track category.id) {
-          <button
-            type="button"
-            [class.is-active]="filters().categoryId === category.id"
-            (click)="updateCategory(category.id)"
-          >
-            {{ category.label }}
-          </button>
-        }
-      </div>
-    </div>
-
-    <div class="filter-row filter-row--primary">
-      <label class="filter-field">
-        <span>Search</span>
-        <div class="input-wrap">
-          <app-icon name="search" />
-          <input
-            type="search"
-            placeholder="Search laptops, monitors, chargers"
-            [ngModel]="filters().searchTerm"
-            name="search"
-            (ngModelChange)="updateSearch($event)"
-          />
-        </div>
-      </label>
-
-      <div class="filter-field filter-field--sort">
-        <span>Sort</span>
-        <div
-          class="sort-menu"
-          (focusout)="handleSortFocusOut($event)"
-          (keydown.escape)="closeSortMenu()"
-        >
-          <button
-            class="sort-menu__trigger"
-            type="button"
-            aria-haspopup="listbox"
-            [attr.aria-expanded]="isSortMenuOpen()"
-            (click)="toggleSortMenu()"
-          >
-            <app-icon name="sort" />
-            {{ selectedSortLabel() }}
-          </button>
-
-          @if (isSortMenuOpen()) {
-            <div class="sort-menu__options" role="listbox" aria-label="Sort products">
-              @for (option of sortOptions; track option.value) {
-                <button
-                  type="button"
-                  role="option"
-                  [class.is-active]="filters().sort === option.value"
-                  [attr.aria-selected]="filters().sort === option.value"
-                  (mousedown)="$event.preventDefault()"
-                  (click)="updateSort(option.value)"
-                >
-                  {{ option.label }}
-                </button>
-              }
-            </div>
-          }
-        </div>
-      </div>
-    </div>
-
-    <div class="filter-field filter-field--price">
-      <span>Price range</span>
-      <div class="price-panel">
-        <div class="price-filter">
-          <label>
-            <span>Min</span>
+  <div class="products-layout">
+    <aside class="filters" aria-label="Product filters">
+      <form>
+        <label class="filter-field filter-field--search">
+          <span>Search</span>
+          <div class="input-wrap">
+            <app-icon name="search" />
             <input
-              type="number"
-              min="0"
-              [max]="maxCatalogPrice"
-              [ngModel]="filters().priceRange.min"
-              name="minPrice"
-              (ngModelChange)="updatePriceRange('min', $event)"
+              type="search"
+              placeholder="Search premium tech"
+              [ngModel]="filters().searchTerm"
+              name="search"
+              (ngModelChange)="updateSearch($event)"
             />
-          </label>
-          <label>
-            <span>Max</span>
-            <input
-              type="number"
-              min="0"
-              [max]="maxCatalogPrice"
-              [ngModel]="filters().priceRange.max"
-              name="maxPrice"
-              (ngModelChange)="updatePriceRange('max', $event)"
-            />
-          </label>
+          </div>
+        </label>
+
+        <div class="filter-group filter-group--collections">
+          <span>Collections</span>
+          <div class="collection-list" aria-label="Collection filters">
+            @for (collection of collectionFilters; track collection.id) {
+              <button
+                type="button"
+                [class.is-active]="filters().collectionId === collection.id"
+                (click)="updateCollection(collection.id)"
+              >
+                <strong>{{ collection.label }}</strong>
+                <small>{{ collection.description }}</small>
+              </button>
+            }
+          </div>
         </div>
 
-        <div class="price-presets" aria-label="Price presets">
-          @for (preset of pricePresets; track preset.label) {
-            <button
-              type="button"
-              [class.is-active]="isPricePresetActive(preset.range)"
-              [attr.aria-pressed]="isPricePresetActive(preset.range)"
-              (click)="applyPriceRange(preset.range)"
+        <div class="filter-group filter-group--categories">
+          <span>Category</span>
+          <div class="category-chips" aria-label="Category filters">
+            @for (category of categoryFilters; track category.id) {
+              <button
+                type="button"
+                [class.is-active]="filters().categoryId === category.id"
+                (click)="updateCategory(category.id)"
+              >
+                {{ category.label }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="filter-field filter-field--price">
+          <span>Price range</span>
+          <div class="price-slider">
+            <div
+              #priceSliderControl
+              class="price-slider__control"
+              (pointerdown)="startPriceTrackDrag($event, priceSliderControl)"
             >
-              {{ preset.label }}
-            </button>
-          }
-          <button class="price-presets__reset" type="button" (click)="resetFilters()">Reset</button>
+              <span class="price-slider__track"></span>
+              <span
+                class="price-slider__range"
+                [style.left.%]="priceSliderMinPercent()"
+                [style.right.%]="100 - priceSliderMaxPercent()"
+              ></span>
+              <button
+                class="price-slider__thumb price-slider__thumb--min"
+                [class.is-active]="activePriceHandle() === 'min'"
+                type="button"
+                role="slider"
+                aria-label="Minimum price"
+                [attr.aria-valuemin]="0"
+                [attr.aria-valuemax]="filters().priceRange.max"
+                [attr.aria-valuenow]="filters().priceRange.min"
+                [attr.aria-valuetext]="formatPrice(filters().priceRange.min)"
+                [style.left.%]="priceSliderMinPercent()"
+                (pointerdown)="
+                  $event.stopPropagation(); startPriceDrag('min', $event, priceSliderControl)
+                "
+                (focus)="setActivePriceHandle('min')"
+                (blur)="clearActivePriceHandle('min')"
+                (keydown)="handlePriceThumbKeydown('min', $event)"
+              ></button>
+              <button
+                class="price-slider__thumb price-slider__thumb--max"
+                [class.is-active]="activePriceHandle() === 'max'"
+                type="button"
+                role="slider"
+                aria-label="Maximum price"
+                [attr.aria-valuemin]="filters().priceRange.min"
+                [attr.aria-valuemax]="maxCatalogPrice"
+                [attr.aria-valuenow]="filters().priceRange.max"
+                [attr.aria-valuetext]="formatPrice(filters().priceRange.max)"
+                [style.left.%]="priceSliderMaxPercent()"
+                (pointerdown)="
+                  $event.stopPropagation(); startPriceDrag('max', $event, priceSliderControl)
+                "
+                (focus)="setActivePriceHandle('max')"
+                (blur)="clearActivePriceHandle('max')"
+                (keydown)="handlePriceThumbKeydown('max', $event)"
+              ></button>
+            </div>
+          </div>
+
+          <div class="price-filter">
+            <label>
+              <span>Min</span>
+              <input
+                type="number"
+                min="0"
+                [max]="filters().priceRange.max"
+                [step]="priceStep"
+                [ngModel]="filters().priceRange.min"
+                name="minPrice"
+                (ngModelChange)="updatePriceRange('min', $event)"
+              />
+            </label>
+            <label>
+              <span>Max</span>
+              <input
+                type="number"
+                [min]="filters().priceRange.min"
+                [max]="maxCatalogPrice"
+                [step]="priceStep"
+                [ngModel]="filters().priceRange.max"
+                name="maxPrice"
+                (ngModelChange)="updatePriceRange('max', $event)"
+              />
+            </label>
+          </div>
         </div>
-      </div>
-    </div>
-  </form>
 
-  <section class="catalog-story" aria-label="Premium picks">
-    <div>
-      <span>Premium picks</span>
-      <strong
-        >Every product is merchandised with realistic specs, stock, reviews, and variants.</strong
-      >
-    </div>
-    <p>
-      Browse the full Vertex edit across workstation performance, signal quality, audio, desk
-      control, and fast charging.
-    </p>
-  </section>
+        <div class="filter-field filter-field--sort">
+          <span>Sort</span>
+          <div
+            class="sort-menu"
+            (focusout)="handleSortFocusOut($event)"
+            (keydown.escape)="closeSortMenu()"
+          >
+            <button
+              class="sort-menu__trigger"
+              type="button"
+              aria-haspopup="listbox"
+              [attr.aria-expanded]="isSortMenuOpen()"
+              (click)="toggleSortMenu()"
+            >
+              <app-icon name="sort" />
+              {{ selectedSortLabel() }}
+            </button>
 
-  @if (isLoading()) {
-    <div class="skeleton-grid" aria-live="polite">
-      @for (item of [1, 2, 3, 4]; track item) {
-        <app-skeleton-card />
+            @if (isSortMenuOpen()) {
+              <div class="sort-menu__options" role="listbox" aria-label="Sort products">
+                @for (option of sortOptions; track option.value) {
+                  <button
+                    type="button"
+                    role="option"
+                    [class.is-active]="filters().sort === option.value"
+                    [attr.aria-selected]="filters().sort === option.value"
+                    (mousedown)="$event.preventDefault()"
+                    (click)="updateSort(option.value)"
+                  >
+                    {{ option.label }}
+                  </button>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <button class="price-presets__reset" type="button" (click)="resetFilters()">
+          Reset filters
+        </button>
+      </form>
+    </aside>
+
+    <div class="products-main">
+      <section class="catalog-story" aria-label="Premium picks">
+        <div>
+          <span>Premium picks</span>
+          <strong
+            >Studio-selected technology for cleaner desks, sharper calls, and better focus.</strong
+          >
+        </div>
+        <p>
+          Browse the Vertex edit across workstation performance, signal quality, audio, desk
+          control, and fast multi-device charging.
+        </p>
+      </section>
+
+      @if (isLoading()) {
+        <div class="skeleton-grid" aria-live="polite">
+          @for (item of [1, 2, 3, 4]; track item) {
+            <app-skeleton-card />
+          }
+        </div>
+      } @else if (filteredProducts().length > 0) {
+        <div class="products-page__results">
+          <p class="products-page__count">
+            Showing {{ visibleProducts().length }} of {{ filteredProducts().length }} products
+          </p>
+        </div>
+        <app-product-grid [products]="visibleProducts()" />
+        @if (isLoadingMore()) {
+          <div class="skeleton-grid skeleton-grid--load-more" aria-live="polite">
+            @for (item of loadMoreSkeletons(); track item) {
+              <app-skeleton-card />
+            }
+          </div>
+        }
+        @if (hasMoreProducts() && !isLoadingMore()) {
+          <div class="load-more">
+            <button class="button load-more__button" type="button" (click)="loadMoreProducts()">
+              Load more
+            </button>
+          </div>
+        }
+      } @else {
+        <app-empty-state
+          title="No matching products"
+          message="Try a broader search term, category, or price range."
+        />
       }
     </div>
-  } @else if (filteredProducts().length > 0) {
-    <div class="products-page__results">
-      <p class="products-page__count">
-        Showing {{ visibleProducts().length }} of {{ filteredProducts().length }} products
-      </p>
-    </div>
-    <app-product-grid [products]="visibleProducts()" />
-    @if (isLoadingMore()) {
-      <div class="skeleton-grid skeleton-grid--load-more" aria-live="polite">
-        @for (item of loadMoreSkeletons(); track item) {
-          <app-skeleton-card />
-        }
-      </div>
-    }
-    @if (hasMoreProducts() && !isLoadingMore()) {
-      <div class="load-more">
-        <button class="button load-more__button" type="button" (click)="loadMoreProducts()">
-          Load more
-        </button>
-      </div>
-    }
-  } @else {
-    <app-empty-state
-      title="No matching products"
-      message="Try a broader search term, category, or price range."
-    />
-  }
+  </div>
 </section>

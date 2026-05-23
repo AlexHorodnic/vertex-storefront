@@ -1,10 +1,11 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, HostListener, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { CATALOG_CATEGORY_FILTERS } from '../../core/constants/storefront.constants';
 import {
   ProductCategoryFilter,
+  ProductCollectionFilter,
   ProductFilters,
   ProductPriceRange,
   ProductSort,
@@ -23,6 +24,8 @@ const filtersStorageKey = 'vertex:catalogFilters';
 const initialVisibleProductCount = 12;
 const visibleProductIncrement = 12;
 const loadMoreDelayMs = 420;
+const priceStep = 25;
+type PriceHandle = 'min' | 'max';
 
 @Component({
   selector: 'app-products',
@@ -49,20 +52,26 @@ export class ProductsComponent {
     { value: 'price-high', label: 'Price: high to low' },
     { value: 'rating', label: 'Top rated' },
   ];
-  protected readonly pricePresets: readonly { label: string; range: ProductPriceRange }[] = [
-    { label: 'Under $150', range: { min: 0, max: 150 } },
-    { label: '$150-$500', range: { min: 150, max: 500 } },
-    { label: '$500-$1,500', range: { min: 500, max: 1500 } },
-    { label: '$1,500+', range: { min: 1500, max: 3000 } },
+  protected readonly collectionFilters: readonly {
+    id: ProductCollectionFilter;
+    label: string;
+    description: string;
+  }[] = [
+    { id: 'all', label: 'All products', description: 'Full Vertex catalog' },
+    { id: 'new-arrivals', label: 'New arrivals', description: 'Recently added products' },
+    { id: 'sale', label: 'Sale', description: 'Products with current savings' },
+    { id: 'best-seller', label: 'Best seller', description: 'Popular customer picks' },
   ];
   protected readonly maxCatalogPrice =
     Math.ceil(Math.max(...this.productService.products().map((product) => product.price)) / 100) *
     100;
+  protected readonly priceStep = priceStep;
   protected readonly filters = signal<ProductFilters>(this.loadInitialFilters());
   protected readonly visibleProductCount = signal(initialVisibleProductCount);
   protected readonly isLoading = signal(true);
   protected readonly isLoadingMore = signal(false);
   protected readonly isSortMenuOpen = signal(false);
+  protected readonly activePriceHandle = signal<PriceHandle | null>(null);
   protected readonly selectedSortLabel = computed(
     () =>
       this.sortOptions.find((option) => option.value === this.filters().sort)?.label ?? 'Featured',
@@ -76,6 +85,12 @@ export class ProductsComponent {
   protected readonly hasMoreProducts = computed(
     () => this.visibleProducts().length < this.filteredProducts().length,
   );
+  protected readonly priceSliderMinPercent = computed(
+    () => (this.filters().priceRange.min / this.maxCatalogPrice) * 100,
+  );
+  protected readonly priceSliderMaxPercent = computed(
+    () => (this.filters().priceRange.max / this.maxCatalogPrice) * 100,
+  );
   protected readonly loadMoreSkeletons = computed(() => {
     const remainingProducts = this.filteredProducts().length - this.visibleProducts().length;
     const skeletonCount = Math.min(visibleProductIncrement, Math.max(remainingProducts, 0));
@@ -83,6 +98,7 @@ export class ProductsComponent {
     return Array.from({ length: skeletonCount }, (_, index) => index);
   });
   private loadMoreRequestId = 0;
+  private priceSliderElement: HTMLElement | null = null;
 
   constructor() {
     effect(() => this.storageService.set(filtersStorageKey, this.filters()));
@@ -99,6 +115,11 @@ export class ProductsComponent {
     this.resetVisibleProducts();
   }
 
+  updateCollection(collectionId: ProductCollectionFilter): void {
+    this.filters.update((filters) => ({ ...filters, collectionId }));
+    this.resetVisibleProducts();
+  }
+
   updateSort(sort: ProductSort): void {
     this.filters.update((filters) => ({ ...filters, sort }));
     this.isSortMenuOpen.set(false);
@@ -109,38 +130,161 @@ export class ProductsComponent {
     const parsedValue = Number(value);
 
     if (!Number.isFinite(parsedValue)) {
+      this.normalizeCurrentPriceRange();
       return;
     }
 
+    this.updatePriceField(field, parsedValue);
+  }
+
+  setActivePriceHandle(handle: PriceHandle): void {
+    this.activePriceHandle.set(handle);
+  }
+
+  clearActivePriceHandle(handle: PriceHandle): void {
+    if (this.activePriceHandle() === handle && !this.priceSliderElement) {
+      this.activePriceHandle.set(null);
+    }
+  }
+
+  startPriceDrag(handle: PriceHandle, event: PointerEvent, sliderElement: HTMLElement): void {
+    event.preventDefault();
+    this.priceSliderElement = sliderElement;
+    this.activePriceHandle.set(handle);
+    this.updatePriceFromPointer(handle, event, sliderElement);
+  }
+
+  startPriceTrackDrag(event: PointerEvent, sliderElement: HTMLElement): void {
+    event.preventDefault();
+    const value = this.priceValueFromPointer(event, sliderElement);
+    const handle = this.closestPriceHandle(value);
+
+    this.startPriceDrag(handle, event, sliderElement);
+  }
+
+  handlePriceThumbKeydown(handle: PriceHandle, event: KeyboardEvent): void {
+    const currentRange = this.filters().priceRange;
+    const currentValue = currentRange[handle];
+    let nextValue: number | null = null;
+
+    switch (event.key) {
+      case 'ArrowLeft':
+      case 'ArrowDown':
+        nextValue = currentValue - priceStep;
+        break;
+      case 'ArrowRight':
+      case 'ArrowUp':
+        nextValue = currentValue + priceStep;
+        break;
+      case 'PageDown':
+        nextValue = currentValue - priceStep * 10;
+        break;
+      case 'PageUp':
+        nextValue = currentValue + priceStep * 10;
+        break;
+      case 'Home':
+        nextValue = handle === 'min' ? 0 : currentRange.min;
+        break;
+      case 'End':
+        nextValue = handle === 'min' ? currentRange.max : this.maxCatalogPrice;
+        break;
+      default:
+        return;
+    }
+
+    event.preventDefault();
+    this.activePriceHandle.set(handle);
+    this.updatePriceField(handle, nextValue);
+  }
+
+  formatPrice(value: number): string {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0,
+    }).format(value);
+  }
+
+  @HostListener('window:pointermove', ['$event'])
+  protected handlePricePointerMove(event: PointerEvent): void {
+    const handle = this.activePriceHandle();
+
+    if (!handle || !this.priceSliderElement) {
+      return;
+    }
+
+    event.preventDefault();
+    this.updatePriceFromPointer(handle, event, this.priceSliderElement);
+  }
+
+  @HostListener('window:pointerup')
+  @HostListener('window:pointercancel')
+  protected stopPricePointerDrag(): void {
+    this.priceSliderElement = null;
+    this.activePriceHandle.set(null);
+  }
+
+  private updatePriceField(field: keyof ProductPriceRange, value: number): void {
     this.filters.update((filters) => {
-      const nextRange = { ...filters.priceRange, [field]: Math.max(0, parsedValue) };
-      const min = Math.min(nextRange.min, nextRange.max);
-      const max = Math.max(nextRange.min, nextRange.max);
+      const currentRange = filters.priceRange;
+      const nextValue = Math.round(value / priceStep) * priceStep;
+      const priceRange =
+        field === 'min'
+          ? {
+              min: Math.min(Math.max(0, nextValue), currentRange.max),
+              max: currentRange.max,
+            }
+          : {
+              min: currentRange.min,
+              max: Math.max(Math.min(nextValue, this.maxCatalogPrice), currentRange.min),
+            };
 
       return {
         ...filters,
-        priceRange: {
-          min: Math.min(min, this.maxCatalogPrice),
-          max: Math.min(max, this.maxCatalogPrice),
-        },
+        priceRange,
       };
     });
     this.resetVisibleProducts();
   }
 
-  applyPriceRange(priceRange: ProductPriceRange): void {
-    this.filters.update((filters) => ({
-      ...filters,
-      priceRange: this.normalizePriceRange(priceRange),
-    }));
-    this.resetVisibleProducts();
+  private updatePriceFromPointer(
+    handle: PriceHandle,
+    event: PointerEvent,
+    sliderElement: HTMLElement,
+  ): void {
+    this.updatePriceField(handle, this.priceValueFromPointer(event, sliderElement));
   }
 
-  isPricePresetActive(priceRange: ProductPriceRange): boolean {
-    const currentRange = this.filters().priceRange;
-    const presetRange = this.normalizePriceRange(priceRange);
+  private priceValueFromPointer(event: PointerEvent, sliderElement: HTMLElement): number {
+    const rect = sliderElement.getBoundingClientRect();
+    const ratio =
+      rect.width > 0 ? Math.min(Math.max((event.clientX - rect.left) / rect.width, 0), 1) : 0;
 
-    return currentRange.min === presetRange.min && currentRange.max === presetRange.max;
+    return ratio * this.maxCatalogPrice;
+  }
+
+  private closestPriceHandle(value: number): PriceHandle {
+    const currentRange = this.filters().priceRange;
+    const minDistance = Math.abs(value - currentRange.min);
+    const maxDistance = Math.abs(value - currentRange.max);
+
+    if (minDistance < maxDistance) {
+      return 'min';
+    }
+
+    if (maxDistance < minDistance) {
+      return 'max';
+    }
+
+    return this.activePriceHandle() ?? (value <= currentRange.min ? 'min' : 'max');
+  }
+
+  private normalizeCurrentPriceRange(): void {
+    this.filters.update((filters) => ({
+      ...filters,
+      priceRange: this.normalizePriceRange(filters.priceRange),
+    }));
+    this.resetVisibleProducts();
   }
 
   resetFilters(): void {
@@ -246,10 +390,14 @@ export class ProductsComponent {
     const categoryId = this.route.snapshot.queryParamMap.has('category')
       ? routeCategory
       : storedFilters.categoryId;
+    const routeCollection = this.collectionFromRoute();
 
     return {
       ...storedFilters,
       categoryId,
+      collectionId: this.route.snapshot.queryParamMap.has('collection')
+        ? routeCollection
+        : (storedFilters.collectionId ?? 'all'),
       priceRange: this.normalizePriceRange(storedFilters.priceRange),
     };
   }
@@ -258,9 +406,17 @@ export class ProductsComponent {
     return {
       searchTerm: '',
       categoryId: 'all',
+      collectionId: 'all',
       sort: 'featured',
       priceRange: { min: 0, max: this.maxCatalogPrice },
     };
+  }
+
+  private collectionFromRoute(): ProductCollectionFilter {
+    const collectionId = this.route.snapshot.queryParamMap.get('collection');
+    const collection = this.collectionFilters.find((item) => item.id === collectionId);
+
+    return collection?.id ?? 'all';
   }
 
   private normalizePriceRange(priceRange: ProductPriceRange): ProductPriceRange {

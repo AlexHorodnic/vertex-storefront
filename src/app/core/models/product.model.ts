@@ -42,6 +42,7 @@ export interface Product {
 }
 
 export type ProductSort = 'featured' | 'price-low' | 'price-high' | 'rating';
+export type ProductCollectionFilter = 'all' | 'new-arrivals' | 'sale' | 'best-seller';
 
 export type ProductCategoryFilter =
   | 'all'
@@ -64,6 +65,7 @@ export interface CatalogCategoryFilter {
 export interface ProductFilters {
   readonly searchTerm: string;
   readonly categoryId: ProductCategoryFilter;
+  readonly collectionId: ProductCollectionFilter;
   readonly sort: ProductSort;
   readonly priceRange: ProductPriceRange;
 }

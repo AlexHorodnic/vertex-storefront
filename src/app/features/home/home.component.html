@@ -8,7 +8,12 @@
     </p>
     <div class="hero__actions">
       <a class="button" routerLink="/products">Shop premium tech</a>
-      <a class="button button--ghost" routerLink="/products">View new arrivals</a>
+      <a
+        class="button button--ghost"
+        routerLink="/products"
+        [queryParams]="{ collection: 'new-arrivals' }"
+        >View new arrivals</a
+      >
     </div>
     <div class="hero__stats" aria-label="Store highlights">
       <div>

@@ -156,17 +156,21 @@ h1 {
 
 .info-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.8rem;
 }
 
 .info-grid div {
   display: grid;
-  gap: 0.25rem;
+  align-content: start;
+  gap: 0.45rem;
+  min-height: 9.2rem;
   padding: 1rem;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.82);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(246, 248, 250, 0.78)),
+    rgba(255, 255, 255, 0.82);
   box-shadow: 0 0.7rem 1.8rem rgba(16, 18, 20, 0.05);
 }
 
@@ -179,6 +183,36 @@ h1 {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
+  letter-spacing: -0.015em;
+}
+
+.info-grid app-icon {
+  color: var(--color-accent);
+  font-size: 1.05rem;
+}
+
+.info-grid .payment-methods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  min-height: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.payment-methods span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.55rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.45rem;
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--color-text);
+  font-size: 0.68rem;
+  font-weight: 900;
+  padding: 0 0.42rem;
 }
 
 .specs,

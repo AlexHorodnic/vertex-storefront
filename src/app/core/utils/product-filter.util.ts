@@ -22,8 +22,13 @@ export function filterProducts(products: readonly Product[], filters: ProductFil
         product.description.toLowerCase().includes(searchTerm) ||
         product.longDescription.toLowerCase().includes(searchTerm) ||
         product.specs.some((spec) => spec.value.toLowerCase().includes(searchTerm));
+      const matchesCollection =
+        filters.collectionId === 'all' ||
+        (filters.collectionId === 'new-arrivals' && product.badge === 'New') ||
+        (filters.collectionId === 'sale' && Boolean(product.originalPrice)) ||
+        (filters.collectionId === 'best-seller' && product.badge === 'Bestseller');
 
-      return matchesCategory && matchesPrice && matchesSearch;
+      return matchesCategory && matchesPrice && matchesSearch && matchesCollection;
     })
     .sort((first, second) => {
       switch (filters.sort) {
