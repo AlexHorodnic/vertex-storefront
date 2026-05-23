@@ -14,11 +14,14 @@
 >
   <header class="cart-drawer__header">
     <div>
-      <p>Your cart</p>
-      <h2>{{ cartService.totals().itemCount }} items</h2>
+      <p>Vertex Circuit cart</p>
+      <h2>
+        {{ cartService.totals().itemCount }}
+        {{ cartService.totals().itemCount === 1 ? 'item' : 'items' }}
+      </h2>
     </div>
     <button class="icon-button" type="button" aria-label="Close cart drawer" (click)="close()">
-      ×
+      Close
     </button>
   </header>
 
@@ -26,11 +29,18 @@
     <div class="cart-drawer__items">
       @for (item of cartService.items(); track item.product.id + item.variantId) {
         <article class="cart-item">
-          <img [src]="item.product.imageUrl" [alt]="item.product.name" />
-          <div>
-            <h3>{{ item.product.name }}</h3>
-            <p>{{ variantLabel(item) }}</p>
-            <strong>{{ item.product.price | currency: 'USD' : 'symbol' : '1.0-0' }}</strong>
+          <a [routerLink]="['/products', item.product.slug]" (click)="close()">
+            <img [src]="item.product.imageUrl" [alt]="item.product.name" />
+          </a>
+          <div class="cart-item__body">
+            <div class="cart-item__title">
+              <div>
+                <h3>{{ item.product.name }}</h3>
+                <p>{{ variantLabel(item) }}</p>
+              </div>
+              <strong>{{ item.product.price | currency: 'USD' : 'symbol' : '1.0-0' }}</strong>
+            </div>
+
             <div class="cart-item__actions">
               <app-quantity-selector
                 [value]="item.quantity"
@@ -42,13 +52,24 @@
                 Remove
               </button>
             </div>
+
+            <div class="cart-item__subtotal">
+              <span>Item subtotal</span>
+              <strong>
+                {{ item.product.price * item.quantity | currency: 'USD' : 'symbol' : '1.0-0' }}
+              </strong>
+            </div>
           </div>
         </article>
       }
     </div>
 
     <footer class="cart-drawer__footer">
-      <div>
+      <div class="cart-note">
+        <span>Delivery</span>
+        <p>Free 2-4 day shipping on premium tech orders over $150.</p>
+      </div>
+      <div class="cart-total">
         <span>Subtotal</span>
         <strong>{{ cartService.totals().subtotal | currency: 'USD' : 'symbol' : '1.0-0' }}</strong>
       </div>
@@ -58,11 +79,20 @@
       </button>
     </footer>
   } @else {
-    <app-empty-state
-      title="Your cart is empty"
-      message="Add a product to compare fit, finish, and delivery details before checkout."
-    >
-      <a class="button" routerLink="/products" (click)="close()">Shop products</a>
-    </app-empty-state>
+    <section class="cart-empty">
+      <div class="cart-empty__mark">VC</div>
+      <p class="cart-empty__eyebrow">Curated setup pending</p>
+      <h2>Your cart is empty</h2>
+      <p>
+        Add a laptop, display, audio piece, or charging essential to build a polished Vertex
+        Circuit workstation.
+      </p>
+      <div class="cart-empty__suggestions" aria-label="Suggested categories">
+        <span>Laptops</span>
+        <span>Audio</span>
+        <span>Charging</span>
+      </div>
+      <a class="button" routerLink="/products" (click)="close()">Shop premium tech</a>
+    </section>
   }
 </aside>

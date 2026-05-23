@@ -43,8 +43,26 @@ export interface Product {
 
 export type ProductSort = 'featured' | 'price-low' | 'price-high' | 'rating';
 
+export type ProductCategoryFilter =
+  | 'all'
+  | 'laptops'
+  | 'monitors'
+  | 'audio'
+  | 'keyboards'
+  | 'mice'
+  | 'smartwatches'
+  | 'webcams'
+  | 'desk-accessories'
+  | 'charging-accessories';
+
+export interface CatalogCategoryFilter {
+  readonly id: ProductCategoryFilter;
+  readonly label: string;
+  readonly categoryIds: readonly string[];
+}
+
 export interface ProductFilters {
   readonly searchTerm: string;
-  readonly categoryId: string;
+  readonly categoryId: ProductCategoryFilter;
   readonly sort: ProductSort;
 }

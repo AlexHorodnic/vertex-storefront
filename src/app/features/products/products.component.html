@@ -6,7 +6,22 @@
   />
 
   <form class="filters" aria-label="Product filters">
-    <label>
+    <div class="filter-group filter-group--categories">
+      <span>Category</span>
+      <div class="category-chips" aria-label="Category filters">
+        @for (category of categoryFilters; track category.id) {
+          <button
+            type="button"
+            [class.is-active]="filters().categoryId === category.id"
+            (click)="updateCategory(category.id)"
+          >
+            {{ category.label }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <label class="filter-field">
       <span>Search</span>
       <input
         type="search"
@@ -17,29 +32,37 @@
       />
     </label>
 
-    <label>
-      <span>Category</span>
-      <select
-        [ngModel]="filters().categoryId"
-        name="category"
-        (ngModelChange)="updateCategory($event)"
-      >
-        <option value="all">All categories</option>
-        @for (category of categories(); track category.id) {
-          <option [value]="category.id">{{ category.name }}</option>
-        }
-      </select>
-    </label>
-
-    <label>
+    <div class="filter-field filter-field--sort">
       <span>Sort</span>
-      <select [ngModel]="filters().sort" name="sort" (ngModelChange)="updateSort($event)">
-        <option value="featured">Featured</option>
-        <option value="price-low">Price: low to high</option>
-        <option value="price-high">Price: high to low</option>
-        <option value="rating">Top rated</option>
-      </select>
-    </label>
+      <div class="sort-menu" (focusout)="handleSortFocusOut($event)" (keydown.escape)="closeSortMenu()">
+        <button
+          class="sort-menu__trigger"
+          type="button"
+          aria-haspopup="listbox"
+          [attr.aria-expanded]="isSortMenuOpen()"
+          (click)="toggleSortMenu()"
+        >
+          {{ selectedSortLabel() }}
+        </button>
+
+        @if (isSortMenuOpen()) {
+          <div class="sort-menu__options" role="listbox" aria-label="Sort products">
+            @for (option of sortOptions; track option.value) {
+              <button
+                type="button"
+                role="option"
+                [class.is-active]="filters().sort === option.value"
+                [attr.aria-selected]="filters().sort === option.value"
+                (mousedown)="$event.preventDefault()"
+                (click)="updateSort(option.value)"
+              >
+                {{ option.label }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+    </div>
   </form>
 
   <section class="catalog-story" aria-label="Premium picks">

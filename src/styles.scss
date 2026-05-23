@@ -221,6 +221,150 @@ img {
   text-decoration: none;
 }
 
+.cart-empty {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 1rem;
+  min-height: 0;
+  padding: 2rem 1.25rem;
+  text-align: center;
+}
+
+.cart-empty__mark {
+  display: grid;
+  width: 5rem;
+  height: 5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 1.4rem;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(37, 99, 235, 0.2), transparent 48%),
+    linear-gradient(145deg, #101214, #303843);
+  box-shadow: 0 1.4rem 3rem rgba(16, 18, 20, 0.18);
+  color: #fff;
+  font-weight: 950;
+  place-items: center;
+}
+
+.cart-empty h2 {
+  font-size: clamp(2rem, 8vw, 3rem);
+}
+
+.cart-empty > p:not(.cart-empty__eyebrow) {
+  max-width: 25rem;
+  color: var(--color-muted);
+  line-height: 1.65;
+}
+
+.cart-empty__suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.cart-empty__suggestions span {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  font-weight: 850;
+  padding: 0.45rem 0.7rem;
+}
+
+.sort-menu {
+  position: relative;
+}
+
+.sort-menu__trigger {
+  position: relative;
+  width: 100%;
+  min-height: 3rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: rgba(246, 247, 248, 0.82);
+  color: var(--color-text);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+  padding: 0 2.45rem 0 0.95rem;
+  text-align: left;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.sort-menu__trigger::after {
+  position: absolute;
+  top: 50%;
+  right: 0.9rem;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-right: 2px solid var(--color-muted);
+  border-bottom: 2px solid var(--color-muted);
+  pointer-events: none;
+  content: '';
+  transform: translateY(-65%) rotate(45deg);
+  transition: transform 180ms ease;
+}
+
+.sort-menu__trigger[aria-expanded='true'] {
+  border-color: color-mix(in srgb, var(--color-accent), white 30%);
+  background: #fff;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent), transparent 86%);
+}
+
+.sort-menu__trigger[aria-expanded='true']::after {
+  transform: translateY(-35%) rotate(225deg);
+}
+
+.sort-menu__trigger:focus-visible {
+  border-color: color-mix(in srgb, var(--color-accent), white 30%);
+  background: #fff;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent), transparent 86%);
+  outline: 0;
+}
+
+.sort-menu__options {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 0.45rem);
+  right: 0;
+  left: 0;
+  display: grid;
+  overflow: hidden;
+  padding: 0.35rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 1.2rem 2.8rem rgba(16, 18, 20, 0.14);
+  backdrop-filter: blur(18px) saturate(150%);
+}
+
+.sort-menu__options button {
+  min-height: 2.55rem;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 800;
+  padding: 0 0.75rem;
+  text-align: left;
+}
+
+.sort-menu__options button:hover,
+.sort-menu__options button:focus-visible,
+.sort-menu__options button.is-active {
+  background: var(--color-text);
+  color: var(--color-surface);
+  outline: 0;
+}
+
 @media (max-width: 900px) {
   .story,
   .brand-proof {

@@ -4,12 +4,11 @@ import { RouterLink } from '@angular/router';
 
 import { CartService } from '../../../core/services/cart.service';
 import { CartItem } from '../../../core/models/cart.model';
-import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { QuantitySelectorComponent } from '../../../shared/components/quantity-selector/quantity-selector.component';
 
 @Component({
   selector: 'app-cart-drawer',
-  imports: [CurrencyPipe, RouterLink, EmptyStateComponent, QuantitySelectorComponent],
+  imports: [CurrencyPipe, RouterLink, QuantitySelectorComponent],
   templateUrl: './cart-drawer.component.html',
   styleUrl: './cart-drawer.component.scss',
 })

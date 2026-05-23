@@ -1,12 +1,18 @@
 import { Product, ProductFilters } from '../models/product.model';
+import { CATALOG_CATEGORY_FILTERS } from '../constants/storefront.constants';
 
 export function filterProducts(products: readonly Product[], filters: ProductFilters): Product[] {
   const searchTerm = filters.searchTerm.trim().toLowerCase();
+  const selectedCategory = CATALOG_CATEGORY_FILTERS.find(
+    (category) => category.id === filters.categoryId,
+  );
 
   return products
     .filter((product) => {
       const matchesCategory =
-        filters.categoryId === 'all' || product.categoryId === filters.categoryId;
+        !selectedCategory ||
+        selectedCategory.id === 'all' ||
+        selectedCategory.categoryIds.includes(product.categoryId);
       const matchesSearch =
         !searchTerm ||
         product.name.toLowerCase().includes(searchTerm) ||

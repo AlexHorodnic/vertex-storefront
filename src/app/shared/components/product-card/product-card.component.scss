@@ -121,8 +121,14 @@ p {
   padding: 0 1rem;
   font-size: 0.85rem;
   box-shadow: none;
+  transition:
+    background 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
 }
 
 .product-card:hover .button--small:not(:disabled) {
   background: var(--color-accent);
+  box-shadow: 0 0.8rem 1.6rem color-mix(in srgb, var(--color-accent), transparent 72%);
+  transform: translateY(-1px);
 }
