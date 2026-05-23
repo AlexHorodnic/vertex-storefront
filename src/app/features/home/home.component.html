@@ -1,14 +1,28 @@
 <section class="hero">
   <div class="hero__content">
     <p class="eyebrow">Premium tech storefront</p>
-    <h1>Vertex Circuit</h1>
+    <h1>Curated electronics for sharper modern work.</h1>
     <p>
-      A curated electronics shop for flagship laptops, displays, audio, desk gear, and charging
-      essentials with a production-grade Angular storefront experience.
+      Vertex Circuit brings flagship laptops, precision displays, refined audio, and desk-ready
+      power into one calm, premium buying experience.
     </p>
     <div class="hero__actions">
       <a class="button" routerLink="/products">Shop premium tech</a>
       <a class="button button--ghost" routerLink="/products">View new arrivals</a>
+    </div>
+    <div class="hero__stats" aria-label="Store highlights">
+      <div>
+        <strong>20</strong>
+        <span>curated products</span>
+      </div>
+      <div>
+        <strong>10</strong>
+        <span>tech categories</span>
+      </div>
+      <div>
+        <strong>4.7+</strong>
+        <span>average rating</span>
+      </div>
     </div>
   </div>
   <div class="hero__media" aria-label="Premium electronics setup">
@@ -16,6 +30,36 @@
       src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1400&q=80"
       alt="Premium laptop and electronics setup"
     />
+    <div class="hero-product" aria-label="Featured product">
+      <span>Featured setup</span>
+      <strong>Aureon Luma 14</strong>
+      <p>Creator laptop paired with PrismView Studio and VoltStack charging.</p>
+      <a routerLink="/products/aureon-luma-14">Explore setup</a>
+    </div>
+  </div>
+</section>
+
+<section class="story story--setup">
+  <div>
+    <p class="eyebrow">Featured setup</p>
+    <h2>Designed around the workstation, not just the device.</h2>
+  </div>
+  <div class="story-grid">
+    <article>
+      <span>01</span>
+      <h3>Creator core</h3>
+      <p>Performance laptops and studio displays anchor focused production work.</p>
+    </article>
+    <article>
+      <span>02</span>
+      <h3>Signal and sound</h3>
+      <p>Premium cameras, headphones, and speakers keep remote presence polished.</p>
+    </article>
+    <article>
+      <span>03</span>
+      <h3>Desk finish</h3>
+      <p>Charging, input, and accessories complete the setup without visual noise.</p>
+    </article>
   </div>
 </section>
 
@@ -51,6 +95,18 @@
     linkUrl="/products"
   />
   <app-product-grid [products]="productService.featuredProducts()" />
+</section>
+
+<section class="brand-proof">
+  <div>
+    <p class="eyebrow">Why Vertex Circuit</p>
+    <h2>Premium picks with data built for a real storefront.</h2>
+  </div>
+  <div class="brand-proof__list">
+    <p>Fictional products avoid brand conflicts while still feeling commercially plausible.</p>
+    <p>Each item carries variants, specs, stock state, reviews, badges, and related products.</p>
+    <p>Reusable Angular components keep the catalog scalable as the assortment grows.</p>
+  </div>
 </section>
 
 <section class="promo">

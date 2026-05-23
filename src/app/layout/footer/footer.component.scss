@@ -2,18 +2,21 @@
   display: flex;
   justify-content: space-between;
   gap: 2rem;
-  padding: 3rem var(--page-gutter);
+  padding: 3.2rem var(--page-gutter);
   border-top: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.42);
   color: var(--color-muted);
 }
 
 strong {
   color: var(--color-text);
+  letter-spacing: -0.02em;
 }
 
 p {
   max-width: 34rem;
   margin: 0.4rem 0 0;
+  line-height: 1.6;
 }
 
 @media (max-width: 700px) {

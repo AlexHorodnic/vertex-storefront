@@ -3,14 +3,18 @@
   align-items: center;
   width: fit-content;
   border-radius: var(--radius-pill);
-  padding: 0.35rem 0.7rem;
-  font-size: 0.75rem;
-  font-weight: 700;
+  padding: 0.38rem 0.68rem;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  box-shadow: 0 0.5rem 1rem rgba(16, 18, 20, 0.1);
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
   line-height: 1;
+  text-transform: uppercase;
 }
 
 .badge--neutral {
-  background: var(--color-surface-strong);
+  background: rgba(255, 255, 255, 0.82);
   color: var(--color-text);
 }
 

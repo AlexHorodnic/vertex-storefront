@@ -1,8 +1,8 @@
 .detail {
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(20rem, 0.95fr);
-  gap: clamp(2rem, 5vw, 4rem);
-  padding: clamp(2rem, 5vw, 4rem) var(--page-gutter);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  padding: var(--section-spacing-tight) var(--page-gutter);
 }
 
 .gallery {
@@ -12,8 +12,10 @@
 
 .gallery__image {
   overflow: hidden;
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
   background: var(--color-surface-strong);
+  box-shadow: var(--shadow-card);
 }
 
 .gallery__image img {
@@ -30,15 +32,22 @@
 
 .gallery__thumbs button {
   overflow: hidden;
-  border: 2px solid transparent;
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  background: transparent;
+  background: var(--color-surface);
   cursor: pointer;
   padding: 0;
+  transition:
+    border-color 180ms ease,
+    transform 180ms ease;
 }
 
 .gallery__thumbs button.is-active {
   border-color: var(--color-accent);
+}
+
+.gallery__thumbs button:hover {
+  transform: translateY(-1px);
 }
 
 .gallery__thumbs img {
@@ -55,15 +64,16 @@
 
 h1 {
   margin: 0;
-  font-size: clamp(2.5rem, 6vw, 5rem);
-  line-height: 0.98;
+  font-size: clamp(2.45rem, 5.5vw, 4.7rem);
+  letter-spacing: -0.055em;
+  line-height: 0.94;
 }
 
 .summary p {
   margin: 0;
   color: var(--color-muted);
-  font-size: 1.05rem;
-  line-height: 1.75;
+  font-size: 1.04rem;
+  line-height: 1.68;
 }
 
 .summary__category {
@@ -75,11 +85,16 @@ h1 {
 }
 
 .stock {
+  width: fit-content;
+  padding: 0.45rem 0.75rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-success-soft);
   color: var(--color-success);
   font-weight: 850;
 }
 
 .stock--out {
+  background: color-mix(in srgb, var(--color-danger), white 88%);
   color: var(--color-danger);
 }
 
@@ -109,11 +124,20 @@ h1 {
   min-height: 2.8rem;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-pill);
-  background: var(--color-surface);
+  background: rgba(255, 255, 255, 0.86);
   cursor: pointer;
   font: inherit;
   font-weight: 800;
   padding: 0 1rem;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.variants button:hover:not(:disabled) {
+  transform: translateY(-1px);
 }
 
 .variants button.is-active {
@@ -140,7 +164,8 @@ h1 {
   padding: 1rem;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  background: var(--color-surface);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 0.7rem 1.8rem rgba(16, 18, 20, 0.05);
 }
 
 .info-grid span {
@@ -150,7 +175,7 @@ h1 {
 
 .specs,
 .related {
-  padding: 0 var(--page-gutter) clamp(3rem, 7vw, 5rem);
+  padding: 0 var(--page-gutter) var(--section-spacing);
 }
 
 .specs > p {
@@ -172,7 +197,8 @@ dl div {
   padding: 1.25rem;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  background: var(--color-surface);
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: 0 0.7rem 1.8rem rgba(16, 18, 20, 0.05);
 }
 
 dt {
