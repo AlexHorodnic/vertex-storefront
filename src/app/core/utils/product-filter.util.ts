@@ -13,6 +13,8 @@ export function filterProducts(products: readonly Product[], filters: ProductFil
         !selectedCategory ||
         selectedCategory.id === 'all' ||
         selectedCategory.categoryIds.includes(product.categoryId);
+      const matchesPrice =
+        product.price >= filters.priceRange.min && product.price <= filters.priceRange.max;
       const matchesSearch =
         !searchTerm ||
         product.name.toLowerCase().includes(searchTerm) ||
@@ -21,7 +23,7 @@ export function filterProducts(products: readonly Product[], filters: ProductFil
         product.longDescription.toLowerCase().includes(searchTerm) ||
         product.specs.some((spec) => spec.value.toLowerCase().includes(searchTerm));
 
-      return matchesCategory && matchesSearch;
+      return matchesCategory && matchesPrice && matchesSearch;
     })
     .sort((first, second) => {
       switch (filters.sort) {

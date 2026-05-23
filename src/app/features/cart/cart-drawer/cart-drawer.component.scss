@@ -178,7 +178,9 @@ h2 {
 }
 
 .cart-note span {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   margin-bottom: 0.25rem;
   font-size: 0.74rem;
   font-weight: 900;

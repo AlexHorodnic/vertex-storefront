@@ -65,4 +65,10 @@ export interface ProductFilters {
   readonly searchTerm: string;
   readonly categoryId: ProductCategoryFilter;
   readonly sort: ProductSort;
+  readonly priceRange: ProductPriceRange;
+}
+
+export interface ProductPriceRange {
+  readonly min: number;
+  readonly max: number;
 }

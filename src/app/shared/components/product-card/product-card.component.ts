@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 
 import { CartService } from '../../../core/services/cart.service';
 import { Product } from '../../../core/models/product.model';
+import { stockStatusClass } from '../../../core/utils/stock-status.util';
 import { BadgeComponent } from '../badge/badge.component';
 import { PriceComponent } from '../price/price.component';
 import { RatingComponent } from '../rating/rating.component';
@@ -25,5 +26,9 @@ export class ProductCardComponent {
     if (variant) {
       this.cartService.addItem(product, variant.id, 1);
     }
+  }
+
+  stockClass(): string {
+    return stockStatusClass(this.product());
   }
 }

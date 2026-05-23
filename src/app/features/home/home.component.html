@@ -3,8 +3,8 @@
     <p class="eyebrow">Premium tech storefront</p>
     <h1>Curated electronics for sharper modern work.</h1>
     <p>
-      Vertex Circuit brings flagship laptops, precision displays, refined audio, and desk-ready
-      power into one calm, premium buying experience.
+      Vertex brings flagship laptops, precision displays, refined audio, and desk-ready power into
+      one calm, premium buying experience.
     </p>
     <div class="hero__actions">
       <a class="button" routerLink="/products">Shop premium tech</a>
@@ -27,7 +27,7 @@
   </div>
   <div class="hero__media" aria-label="Premium electronics setup">
     <img
-      src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1400&q=80"
+      [src]="productService.featuredProducts()[0]?.imageUrl || ''"
       alt="Premium laptop and electronics setup"
     />
     <div class="hero-product" aria-label="Featured product">
@@ -99,7 +99,7 @@
 
 <section class="brand-proof">
   <div>
-    <p class="eyebrow">Why Vertex Circuit</p>
+    <p class="eyebrow">Why Vertex</p>
     <h2>Premium picks with data built for a real storefront.</h2>
   </div>
   <div class="brand-proof__list">

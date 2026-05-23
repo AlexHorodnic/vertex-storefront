@@ -14,7 +14,7 @@
 >
   <header class="cart-drawer__header">
     <div>
-      <p>Vertex Circuit cart</p>
+      <p>Vertex cart</p>
       <h2>
         {{ cartService.totals().itemCount }}
         {{ cartService.totals().itemCount === 1 ? 'item' : 'items' }}
@@ -66,7 +66,7 @@
 
     <footer class="cart-drawer__footer">
       <div class="cart-note">
-        <span>Delivery</span>
+        <span><app-icon name="truck" /> Delivery</span>
         <p>Free 2-4 day shipping on premium tech orders over $150.</p>
       </div>
       <div class="cart-total">
@@ -85,7 +85,7 @@
       <h2>Your cart is empty</h2>
       <p>
         Add a laptop, display, audio piece, or charging essential to build a polished Vertex
-        Circuit workstation.
+        workstation.
       </p>
       <div class="cart-empty__suggestions" aria-label="Suggested categories">
         <span>Laptops</span>

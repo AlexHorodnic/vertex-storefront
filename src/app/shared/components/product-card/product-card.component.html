@@ -13,11 +13,7 @@
   <div class="product-card__body">
     <div class="product-card__meta">
       <app-rating [rating]="product().rating" [reviewCount]="product().reviewCount" />
-      @if (product().stock > 0) {
-        <span>{{ product().stockStatus }}</span>
-      } @else {
-        <span>{{ product().stockStatus }}</span>
-      }
+      <span [class]="stockClass()">{{ product().stockStatus }}</span>
     </div>
 
     <h3>

@@ -21,46 +21,97 @@
       </div>
     </div>
 
-    <label class="filter-field">
-      <span>Search</span>
-      <input
-        type="search"
-        placeholder="Search laptops, monitors, chargers"
-        [ngModel]="filters().searchTerm"
-        name="search"
-        (ngModelChange)="updateSearch($event)"
-      />
-    </label>
+    <div class="filter-row filter-row--primary">
+      <label class="filter-field">
+        <span>Search</span>
+        <div class="input-wrap">
+          <app-icon name="search" />
+          <input
+            type="search"
+            placeholder="Search laptops, monitors, chargers"
+            [ngModel]="filters().searchTerm"
+            name="search"
+            (ngModelChange)="updateSearch($event)"
+          />
+        </div>
+      </label>
 
-    <div class="filter-field filter-field--sort">
-      <span>Sort</span>
-      <div class="sort-menu" (focusout)="handleSortFocusOut($event)" (keydown.escape)="closeSortMenu()">
-        <button
-          class="sort-menu__trigger"
-          type="button"
-          aria-haspopup="listbox"
-          [attr.aria-expanded]="isSortMenuOpen()"
-          (click)="toggleSortMenu()"
+      <div class="filter-field filter-field--sort">
+        <span>Sort</span>
+        <div
+          class="sort-menu"
+          (focusout)="handleSortFocusOut($event)"
+          (keydown.escape)="closeSortMenu()"
         >
-          {{ selectedSortLabel() }}
-        </button>
+          <button
+            class="sort-menu__trigger"
+            type="button"
+            aria-haspopup="listbox"
+            [attr.aria-expanded]="isSortMenuOpen()"
+            (click)="toggleSortMenu()"
+          >
+            <app-icon name="sort" />
+            {{ selectedSortLabel() }}
+          </button>
 
-        @if (isSortMenuOpen()) {
-          <div class="sort-menu__options" role="listbox" aria-label="Sort products">
-            @for (option of sortOptions; track option.value) {
-              <button
-                type="button"
-                role="option"
-                [class.is-active]="filters().sort === option.value"
-                [attr.aria-selected]="filters().sort === option.value"
-                (mousedown)="$event.preventDefault()"
-                (click)="updateSort(option.value)"
-              >
-                {{ option.label }}
-              </button>
-            }
-          </div>
-        }
+          @if (isSortMenuOpen()) {
+            <div class="sort-menu__options" role="listbox" aria-label="Sort products">
+              @for (option of sortOptions; track option.value) {
+                <button
+                  type="button"
+                  role="option"
+                  [class.is-active]="filters().sort === option.value"
+                  [attr.aria-selected]="filters().sort === option.value"
+                  (mousedown)="$event.preventDefault()"
+                  (click)="updateSort(option.value)"
+                >
+                  {{ option.label }}
+                </button>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-field filter-field--price">
+      <span>Price range</span>
+      <div class="price-panel">
+        <div class="price-filter">
+          <label>
+            <span>Min</span>
+            <input
+              type="number"
+              min="0"
+              [max]="maxCatalogPrice"
+              [ngModel]="filters().priceRange.min"
+              name="minPrice"
+              (ngModelChange)="updatePriceRange('min', $event)"
+            />
+          </label>
+          <label>
+            <span>Max</span>
+            <input
+              type="number"
+              min="0"
+              [max]="maxCatalogPrice"
+              [ngModel]="filters().priceRange.max"
+              name="maxPrice"
+              (ngModelChange)="updatePriceRange('max', $event)"
+            />
+          </label>
+        </div>
+
+        <div class="price-presets" aria-label="Price presets">
+          @for (preset of pricePresets; track preset.label) {
+            <button type="button" (click)="applyPriceRange(preset.range)">
+              {{ preset.label }}
+            </button>
+          }
+          <button class="price-presets__reset" type="button" (click)="resetFilters()">
+            Reset
+          </button>
+        </div>
       </div>
     </div>
   </form>
@@ -71,8 +122,8 @@
       <strong>Every product is merchandised with realistic specs, stock, reviews, and variants.</strong>
     </div>
     <p>
-      Browse the full Vertex Circuit edit across workstation performance, signal quality, audio,
-      desk control, and fast charging.
+      Browse the full Vertex edit across workstation performance, signal quality, audio, desk
+      control, and fast charging.
     </p>
   </section>
 
@@ -88,7 +139,7 @@
   } @else {
     <app-empty-state
       title="No matching products"
-      message="Try a broader search term or choose a different category."
+      message="Try a broader search term, category, or price range."
     />
   }
 </section>

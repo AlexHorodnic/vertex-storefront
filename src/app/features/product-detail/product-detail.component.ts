@@ -3,12 +3,16 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { CartService } from '../../core/services/cart.service';
 import { ProductService } from '../../core/services/product.service';
+import { StorageService } from '../../core/services/storage.service';
+import { stockStatusClass } from '../../core/utils/stock-status.util';
+import { isVariantSelectionMap } from '../../core/utils/storage-guards.util';
 import { BadgeComponent } from '../../shared/components/badge/badge.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 import { PriceComponent } from '../../shared/components/price/price.component';
 import { ProductGridComponent } from '../../shared/components/product-grid/product-grid.component';
 import { QuantitySelectorComponent } from '../../shared/components/quantity-selector/quantity-selector.component';
 import { RatingComponent } from '../../shared/components/rating/rating.component';
+import { IconComponent } from '../../shared/components/icon/icon.component';
 
 @Component({
   selector: 'app-product-detail',
@@ -20,6 +24,7 @@ import { RatingComponent } from '../../shared/components/rating/rating.component
     ProductGridComponent,
     QuantitySelectorComponent,
     RatingComponent,
+    IconComponent,
   ],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.scss',
@@ -28,12 +33,13 @@ export class ProductDetailComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly productService = inject(ProductService);
   private readonly cartService = inject(CartService);
+  private readonly storageService = inject(StorageService);
 
   protected readonly product = computed(() =>
     this.productService.getProductBySlug(this.route.snapshot.paramMap.get('slug') ?? ''),
   );
   protected readonly selectedImage = signal('');
-  protected readonly selectedVariantId = signal('');
+  protected readonly selectedVariantId = signal(this.storedVariantId());
   protected readonly quantity = signal(1);
   protected readonly relatedProducts = computed(() => {
     const product = this.product();
@@ -46,6 +52,7 @@ export class ProductDetailComponent {
 
   selectVariant(variantId: string): void {
     this.selectedVariantId.set(variantId);
+    this.persistVariant(variantId);
   }
 
   updateQuantity(quantity: number): void {
@@ -60,5 +67,41 @@ export class ProductDetailComponent {
     if (product && variantId) {
       this.cartService.addItem(product, variantId, this.quantity());
     }
+  }
+
+  stockClass(): string {
+    const product = this.product();
+    return product ? stockStatusClass(product) : 'stock-status';
+  }
+
+  private storedVariantId(): string {
+    const slug = this.route.snapshot.paramMap.get('slug') ?? '';
+    const selections = this.storageService.get<Record<string, string>>(
+      'vertex:selectedVariants',
+      {},
+      isVariantSelectionMap,
+    );
+
+    const variantId = selections[slug] ?? '';
+    const product = this.productService.getProductBySlug(slug);
+    const variant = product?.variants.find((item) => item.id === variantId && item.inStock);
+
+    return variant?.id ?? '';
+  }
+
+  private persistVariant(variantId: string): void {
+    const slug = this.route.snapshot.paramMap.get('slug') ?? '';
+
+    if (!slug) {
+      return;
+    }
+
+    const selections = this.storageService.get<Record<string, string>>(
+      'vertex:selectedVariants',
+      {},
+      isVariantSelectionMap,
+    );
+
+    this.storageService.set('vertex:selectedVariants', { ...selections, [slug]: variantId });
   }
 }

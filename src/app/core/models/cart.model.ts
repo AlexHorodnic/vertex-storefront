@@ -6,6 +6,12 @@ export interface CartItem {
   readonly quantity: number;
 }
 
+export interface PersistedCartItem {
+  readonly productId: string;
+  readonly variantId: string;
+  readonly quantity: number;
+}
+
 export interface CartTotals {
   readonly itemCount: number;
   readonly subtotal: number;

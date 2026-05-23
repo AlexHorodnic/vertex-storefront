@@ -1,7 +1,7 @@
 <header class="site-header">
-  <a class="site-header__brand" routerLink="/" aria-label="Vertex Circuit home">
+  <a class="site-header__brand" routerLink="/" aria-label="Vertex home">
     <span aria-hidden="true">V</span>
-    Vertex Circuit
+    Vertex
   </a>
 
   <nav aria-label="Primary navigation">
@@ -22,6 +22,7 @@
     (click)="cartService.openDrawer()"
     aria-label="Open cart"
   >
+    <app-icon name="cart" />
     Cart
     <span>{{ cartService.totals().itemCount }}</span>
   </button>

@@ -27,7 +27,8 @@
       <p>{{ item.description }}</p>
       <app-price [amount]="item.price" [compareAt]="item.originalPrice" />
 
-      <div class="stock" [class.stock--out]="item.stock === 0">
+      <div [class]="stockClass()">
+        <app-icon name="stock" />
         {{ item.stock > 0 ? item.stockStatus + ' - ' + item.stock + ' available' : item.stockStatus }}
       </div>
 
@@ -60,11 +61,11 @@
 
       <div class="info-grid">
         <div>
-          <strong>Delivery</strong>
+          <strong><app-icon name="truck" /> Delivery</strong>
           <span>Free 2-4 day shipping over $150</span>
         </div>
         <div>
-          <strong>Payment</strong>
+          <strong><app-icon name="shield" /> Payment</strong>
           <span>Secure card, wallet, and gift card UI</span>
         </div>
       </div>

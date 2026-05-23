@@ -1,0 +1,40 @@
+<svg viewBox="0 0 24 24" aria-hidden="true">
+  @switch (name()) {
+    @case ('cart') {
+      <path d="M6.5 6.5h14l-1.6 8.2a2 2 0 0 1-2 1.6H9a2 2 0 0 1-2-1.7L5.6 3.8H3" />
+      <path d="M9 20h.01M17 20h.01" />
+    }
+    @case ('search') {
+      <path d="m20 20-4.2-4.2" />
+      <circle cx="11" cy="11" r="6.2" />
+    }
+    @case ('sort') {
+      <path d="M7 6h10M9 12h6M11 18h2" />
+    }
+    @case ('truck') {
+      <path d="M3.5 6.5h11v10h-11zM14.5 10h3.4l2.6 3v3.5h-6z" />
+      <path d="M7 19a1.8 1.8 0 1 0 0-3.6A1.8 1.8 0 0 0 7 19ZM18 19a1.8 1.8 0 1 0 0-3.6A1.8 1.8 0 0 0 18 19Z" />
+    }
+    @case ('shield') {
+      <path d="M12 3.5 19 6v5.2c0 4.2-2.8 7.7-7 9.3-4.2-1.6-7-5.1-7-9.3V6z" />
+      <path d="m9 12 2 2 4-4" />
+    }
+    @case ('trash') {
+      <path d="M5 7h14M9 7V5h6v2M8 10v8M12 10v8M16 10v8" />
+      <path d="M7 7l1 14h8l1-14" />
+    }
+    @case ('minus') {
+      <path d="M6 12h12" />
+    }
+    @case ('plus') {
+      <path d="M12 6v12M6 12h12" />
+    }
+    @case ('stock') {
+      <path d="M20 7.5 12 3 4 7.5v9L12 21l8-4.5z" />
+      <path d="M12 12 4.5 7.8M12 12l7.5-4.2M12 12v8.5" />
+    }
+    @case ('spec') {
+      <path d="M6 5h12v14H6zM9 9h6M9 13h6M9 17h3" />
+    }
+  }
+</svg>

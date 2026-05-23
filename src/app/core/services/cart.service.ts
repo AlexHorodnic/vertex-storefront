@@ -1,11 +1,18 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, effect, inject, signal } from '@angular/core';
 
-import { CartItem } from '../models/cart.model';
+import { CartItem, PersistedCartItem } from '../models/cart.model';
 import { Product } from '../models/product.model';
+import { ProductService } from './product.service';
+import { StorageService } from './storage.service';
+import { isPersistedCartItems } from '../utils/storage-guards.util';
+
+const cartStorageKey = 'vertex:cart';
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
-  private readonly itemsState = signal<readonly CartItem[]>([]);
+  private readonly productService = inject(ProductService);
+  private readonly storageService = inject(StorageService);
+  private readonly itemsState = signal<readonly CartItem[]>(this.loadStoredItems());
   private readonly drawerOpenState = signal(false);
 
   readonly items = this.itemsState.asReadonly();
@@ -18,6 +25,18 @@ export class CartService {
       subtotal: items.reduce((total, item) => total + item.product.price * item.quantity, 0),
     };
   });
+
+  constructor() {
+    effect(() => {
+      const persistedItems = this.itemsState().map<PersistedCartItem>((item) => ({
+        productId: item.product.id,
+        variantId: item.variantId,
+        quantity: item.quantity,
+      }));
+
+      this.storageService.set(cartStorageKey, persistedItems);
+    });
+  }
 
   addItem(product: Product, variantId: string, quantity: number): void {
     if (product.stock <= 0 || quantity < 1) {
@@ -74,5 +93,25 @@ export class CartService {
 
   closeDrawer(): void {
     this.drawerOpenState.set(false);
+  }
+
+  private loadStoredItems(): readonly CartItem[] {
+    return this.storageService
+      .get<readonly PersistedCartItem[]>(cartStorageKey, [], isPersistedCartItems)
+      .map((item) => {
+        const product = this.productService.getProductById(item.productId);
+        const variant = product?.variants.find((productVariant) => productVariant.id === item.variantId);
+
+        if (!product || !variant || product.stock <= 0) {
+          return undefined;
+        }
+
+        return {
+          product,
+          variantId: variant.id,
+          quantity: Math.min(item.quantity, product.stock),
+        };
+      })
+      .filter((item): item is CartItem => Boolean(item));
   }
 }
