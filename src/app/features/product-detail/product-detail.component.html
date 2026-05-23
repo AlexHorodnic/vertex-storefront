@@ -2,7 +2,14 @@
   <section class="detail">
     <div class="gallery">
       <div class="gallery__image">
-        <img [src]="selectedImage() || item.gallery[0]" [alt]="item.name" />
+        <button
+          class="gallery__trigger"
+          type="button"
+          (click)="openLightbox(selectedImage() || item.gallery[0])"
+          [attr.aria-label]="'Expand image of ' + item.name"
+        >
+          <img [src]="selectedImage() || item.gallery[0]" [alt]="item.name" />
+        </button>
       </div>
       <div class="gallery__thumbs" aria-label="Product images">
         @for (image of item.gallery; track image) {
@@ -29,7 +36,9 @@
 
       <div [class]="stockClass()">
         <app-icon name="stock" />
-        {{ item.stock > 0 ? item.stockStatus + ' - ' + item.stock + ' available' : item.stockStatus }}
+        {{
+          item.stock > 0 ? item.stockStatus + ' - ' + item.stock + ' available' : item.stockStatus
+        }}
       </div>
 
       <div class="variants">
@@ -92,6 +101,44 @@
       <h2>Related products</h2>
       <app-product-grid [products]="relatedProducts()" />
     </section>
+  }
+
+  @if (isLightboxOpen()) {
+    <div
+      class="lightbox"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-label]="item.name + ' image gallery'"
+      (click)="closeLightbox()"
+    >
+      <button
+        class="lightbox__close"
+        type="button"
+        aria-label="Close expanded image"
+        (click)="closeLightbox(); $event.stopPropagation()"
+      >
+        &times;
+      </button>
+      <button
+        class="lightbox__nav lightbox__nav--prev"
+        type="button"
+        aria-label="Previous image"
+        (click)="showPreviousImage(); $event.stopPropagation()"
+      >
+        &lsaquo;
+      </button>
+      <figure class="lightbox__frame" (click)="$event.stopPropagation()">
+        <img [src]="selectedImage() || item.gallery[0]" [alt]="item.name + ' expanded view'" />
+      </figure>
+      <button
+        class="lightbox__nav lightbox__nav--next"
+        type="button"
+        aria-label="Next image"
+        (click)="showNextImage(); $event.stopPropagation()"
+      >
+        &rsaquo;
+      </button>
+    </div>
   }
 } @else {
   <app-empty-state

@@ -16,13 +16,20 @@
   border-radius: var(--radius-xl);
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(246, 248, 250, 0.9)), #f6f7f8;
   box-shadow: var(--shadow-card);
-  padding: clamp(0.65rem, 1.8vw, 1rem);
 }
 
-.gallery__image img {
+.gallery__trigger {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+  padding: 0;
+}
+
+.gallery__trigger img {
   width: 100%;
   aspect-ratio: 1;
-  border-radius: var(--radius-lg);
   object-fit: cover;
 }
 
@@ -97,7 +104,6 @@ h1 {
 .variants,
 .purchase,
 .info-grid,
-.specs,
 .related {
   margin-top: 1rem;
 }
@@ -178,6 +184,10 @@ h1 {
 .specs,
 .related {
   padding: 0 var(--page-gutter) var(--section-spacing);
+}
+
+.specs {
+  margin: 0;
 }
 
 .specs > p {

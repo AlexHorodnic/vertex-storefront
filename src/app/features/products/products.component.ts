@@ -20,6 +20,9 @@ import { SectionHeaderComponent } from '../../shared/components/section-header/s
 import { SkeletonCardComponent } from '../../shared/components/skeleton-card/skeleton-card.component';
 
 const filtersStorageKey = 'vertex:catalogFilters';
+const initialVisibleProductCount = 12;
+const visibleProductIncrement = 12;
+const loadMoreDelayMs = 420;
 
 @Component({
   selector: 'app-products',
@@ -52,20 +55,34 @@ export class ProductsComponent {
     { label: '$500-$1,500', range: { min: 500, max: 1500 } },
     { label: '$1,500+', range: { min: 1500, max: 3000 } },
   ];
-  protected readonly maxCatalogPrice = Math.ceil(
-    Math.max(...this.productService.products().map((product) => product.price)) / 100,
-  ) * 100;
+  protected readonly maxCatalogPrice =
+    Math.ceil(Math.max(...this.productService.products().map((product) => product.price)) / 100) *
+    100;
   protected readonly filters = signal<ProductFilters>(this.loadInitialFilters());
+  protected readonly visibleProductCount = signal(initialVisibleProductCount);
   protected readonly isLoading = signal(true);
+  protected readonly isLoadingMore = signal(false);
   protected readonly isSortMenuOpen = signal(false);
   protected readonly selectedSortLabel = computed(
     () =>
-      this.sortOptions.find((option) => option.value === this.filters().sort)?.label ??
-      'Featured',
+      this.sortOptions.find((option) => option.value === this.filters().sort)?.label ?? 'Featured',
   );
   protected readonly filteredProducts = computed(() =>
     filterProducts(this.productService.products(), this.filters()),
   );
+  protected readonly visibleProducts = computed(() =>
+    this.filteredProducts().slice(0, this.visibleProductCount()),
+  );
+  protected readonly hasMoreProducts = computed(
+    () => this.visibleProducts().length < this.filteredProducts().length,
+  );
+  protected readonly loadMoreSkeletons = computed(() => {
+    const remainingProducts = this.filteredProducts().length - this.visibleProducts().length;
+    const skeletonCount = Math.min(visibleProductIncrement, Math.max(remainingProducts, 0));
+
+    return Array.from({ length: skeletonCount }, (_, index) => index);
+  });
+  private loadMoreRequestId = 0;
 
   constructor() {
     effect(() => this.storageService.set(filtersStorageKey, this.filters()));
@@ -74,15 +91,18 @@ export class ProductsComponent {
 
   updateSearch(searchTerm: string): void {
     this.filters.update((filters) => ({ ...filters, searchTerm }));
+    this.resetVisibleProducts();
   }
 
   updateCategory(categoryId: ProductCategoryFilter): void {
     this.filters.update((filters) => ({ ...filters, categoryId }));
+    this.resetVisibleProducts();
   }
 
   updateSort(sort: ProductSort): void {
     this.filters.update((filters) => ({ ...filters, sort }));
     this.isSortMenuOpen.set(false);
+    this.resetVisibleProducts();
   }
 
   updatePriceRange(field: keyof ProductPriceRange, value: string): void {
@@ -105,14 +125,77 @@ export class ProductsComponent {
         },
       };
     });
+    this.resetVisibleProducts();
   }
 
   applyPriceRange(priceRange: ProductPriceRange): void {
-    this.filters.update((filters) => ({ ...filters, priceRange: this.normalizePriceRange(priceRange) }));
+    this.filters.update((filters) => ({
+      ...filters,
+      priceRange: this.normalizePriceRange(priceRange),
+    }));
+    this.resetVisibleProducts();
+  }
+
+  isPricePresetActive(priceRange: ProductPriceRange): boolean {
+    const currentRange = this.filters().priceRange;
+    const presetRange = this.normalizePriceRange(priceRange);
+
+    return currentRange.min === presetRange.min && currentRange.max === presetRange.max;
   }
 
   resetFilters(): void {
     this.filters.set(this.defaultFilters());
+    this.resetVisibleProducts();
+  }
+
+  loadMoreProducts(): void {
+    if (this.isLoadingMore() || !this.hasMoreProducts()) {
+      return;
+    }
+
+    const currentCount = this.visibleProductCount();
+    const nextCount = Math.min(
+      currentCount + visibleProductIncrement,
+      this.filteredProducts().length,
+    );
+    const nextProducts = this.filteredProducts().slice(currentCount, nextCount);
+    const requestId = ++this.loadMoreRequestId;
+
+    this.isLoadingMore.set(true);
+
+    Promise.allSettled([this.preloadProductImages(nextProducts), this.delay(loadMoreDelayMs)]).then(
+      () => {
+        if (requestId !== this.loadMoreRequestId) {
+          return;
+        }
+
+        this.visibleProductCount.set(nextCount);
+        this.isLoadingMore.set(false);
+      },
+    );
+  }
+
+  private preloadProductImages(products: readonly { imageUrl: string }[]): Promise<void> {
+    return Promise.allSettled(
+      products.map(
+        (product) =>
+          new Promise<void>((resolve) => {
+            const image = new Image();
+
+            image.onload = () => resolve();
+            image.onerror = () => resolve();
+            image.src = product.imageUrl;
+          }),
+      ),
+    ).then(() => undefined);
+  }
+
+  private delay(milliseconds: number): Promise<void> {
+    return new Promise((resolve) => {
+      window.setTimeout(() => {
+        resolve();
+      }, milliseconds);
+    });
   }
 
   toggleSortMenu(): void {
@@ -188,5 +271,11 @@ export class ProductsComponent {
       min: Math.min(min, max),
       max: Math.max(min, max),
     };
+  }
+
+  private resetVisibleProducts(): void {
+    this.loadMoreRequestId++;
+    this.isLoadingMore.set(false);
+    this.visibleProductCount.set(initialVisibleProductCount);
   }
 }

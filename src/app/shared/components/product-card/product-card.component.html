@@ -4,7 +4,17 @@
     [routerLink]="['/products', product().slug]"
     [attr.aria-label]="'View ' + product().name"
   >
-    <img [src]="product().imageUrl" [alt]="product().name" loading="lazy" />
+    @if (!isImageLoaded()) {
+      <span class="product-card__image-skeleton" aria-hidden="true"></span>
+    }
+    <img
+      [src]="product().imageUrl"
+      [alt]="product().name"
+      loading="lazy"
+      [class.is-loaded]="isImageLoaded()"
+      (load)="markImageLoaded()"
+      (error)="markImageLoaded()"
+    />
     @if (product().badge; as badge) {
       <app-badge>{{ badge }}</app-badge>
     }

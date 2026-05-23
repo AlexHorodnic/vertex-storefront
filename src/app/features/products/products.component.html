@@ -104,13 +104,16 @@
 
         <div class="price-presets" aria-label="Price presets">
           @for (preset of pricePresets; track preset.label) {
-            <button type="button" (click)="applyPriceRange(preset.range)">
+            <button
+              type="button"
+              [class.is-active]="isPricePresetActive(preset.range)"
+              [attr.aria-pressed]="isPricePresetActive(preset.range)"
+              (click)="applyPriceRange(preset.range)"
+            >
               {{ preset.label }}
             </button>
           }
-          <button class="price-presets__reset" type="button" (click)="resetFilters()">
-            Reset
-          </button>
+          <button class="price-presets__reset" type="button" (click)="resetFilters()">Reset</button>
         </div>
       </div>
     </div>
@@ -119,7 +122,9 @@
   <section class="catalog-story" aria-label="Premium picks">
     <div>
       <span>Premium picks</span>
-      <strong>Every product is merchandised with realistic specs, stock, reviews, and variants.</strong>
+      <strong
+        >Every product is merchandised with realistic specs, stock, reviews, and variants.</strong
+      >
     </div>
     <p>
       Browse the full Vertex edit across workstation performance, signal quality, audio, desk
@@ -134,8 +139,26 @@
       }
     </div>
   } @else if (filteredProducts().length > 0) {
-    <p class="products-page__count">{{ filteredProducts().length }} products found</p>
-    <app-product-grid [products]="filteredProducts()" />
+    <div class="products-page__results">
+      <p class="products-page__count">
+        Showing {{ visibleProducts().length }} of {{ filteredProducts().length }} products
+      </p>
+    </div>
+    <app-product-grid [products]="visibleProducts()" />
+    @if (isLoadingMore()) {
+      <div class="skeleton-grid skeleton-grid--load-more" aria-live="polite">
+        @for (item of loadMoreSkeletons(); track item) {
+          <app-skeleton-card />
+        }
+      </div>
+    }
+    @if (hasMoreProducts() && !isLoadingMore()) {
+      <div class="load-more">
+        <button class="button load-more__button" type="button" (click)="loadMoreProducts()">
+          Load more
+        </button>
+      </div>
+    }
   } @else {
     <app-empty-state
       title="No matching products"

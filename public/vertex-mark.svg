@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Vertex">
+  <rect width="64" height="64" rx="18" fill="#101214"/>
+  <path d="M14 15h13.4l8.8 22.1L45 15h5L38.1 49H27.8L14 15Z" fill="#F8FAFC"/>
+  <path d="M25.8 15h8.7l-3.9 10.8L25.8 15Z" fill="#8EA7C8"/>
+  <path d="M42.2 49H50L36.6 15h-5.1l10.7 34Z" fill="#D7DCE2"/>
+</svg>

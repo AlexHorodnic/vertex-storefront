@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { CartService } from '../../../core/services/cart.service';
@@ -18,6 +18,11 @@ export class ProductCardComponent {
   private readonly cartService = inject(CartService);
 
   readonly product = input.required<Product>();
+  protected readonly isImageLoaded = signal(false);
+
+  markImageLoaded(): void {
+    this.isImageLoaded.set(true);
+  }
 
   addToCart(): void {
     const product = this.product();
