@@ -17,11 +17,18 @@ button {
   color: var(--color-text);
   cursor: pointer;
   font: inherit;
+  line-height: 0;
   place-items: center;
 }
 
 button:hover:not(:disabled) {
   background: var(--color-surface-strong);
+}
+
+button app-icon {
+  display: grid;
+  font-size: 0.95rem;
+  place-items: center;
 }
 
 button:disabled {

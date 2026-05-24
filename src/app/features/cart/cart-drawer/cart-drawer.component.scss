@@ -156,10 +156,14 @@ h2 {
 
 .cart-item__actions > button app-icon {
   font-size: 1.12rem;
+  transform: translateY(-0.5px);
 }
 
 .icon-button app-icon {
+  display: grid;
   font-size: 1.05rem;
+  place-items: center;
+  transform: translateY(0.5px);
 }
 
 .cart-item__actions > button:hover {
@@ -217,8 +221,7 @@ h2 {
   color: var(--color-text);
   cursor: pointer;
   font: inherit;
-  font-size: 0.88rem;
-  font-weight: 850;
+  line-height: 0;
   padding: 0;
   place-items: center;
   transition:

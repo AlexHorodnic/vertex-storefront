@@ -141,7 +141,7 @@
         aria-label="Close expanded image"
         (click)="closeLightbox(); $event.stopPropagation()"
       >
-        &times;
+        <app-icon name="close" />
       </button>
       <button
         class="lightbox__nav lightbox__nav--prev"
@@ -149,7 +149,7 @@
         aria-label="Previous image"
         (click)="showPreviousImage(); $event.stopPropagation()"
       >
-        &lsaquo;
+        <app-icon name="chevron-left" />
       </button>
       <figure class="lightbox__frame" (click)="$event.stopPropagation()">
         <img [src]="selectedImage() || item.gallery[0]" [alt]="item.name + ' expanded view'" />
@@ -160,7 +160,7 @@
         aria-label="Next image"
         (click)="showNextImage(); $event.stopPropagation()"
       >
-        &rsaquo;
+        <app-icon name="chevron-right" />
       </button>
     </div>
   }

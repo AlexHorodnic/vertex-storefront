@@ -1,7 +1,9 @@
 import { Component, input, output } from '@angular/core';
+import { IconComponent } from '../icon/icon.component';
 
 @Component({
   selector: 'app-quantity-selector',
+  imports: [IconComponent],
   templateUrl: './quantity-selector.component.html',
   styleUrl: './quantity-selector.component.scss',
 })
