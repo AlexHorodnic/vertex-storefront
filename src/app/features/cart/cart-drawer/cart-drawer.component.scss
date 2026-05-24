@@ -140,6 +140,9 @@ h2 {
 }
 
 .cart-item__actions > button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   border: 0;
   border-radius: var(--radius-pill);
   background: transparent;
@@ -149,6 +152,14 @@ h2 {
   font-size: 0.82rem;
   font-weight: 850;
   padding: 0.45rem 0.7rem;
+}
+
+.cart-item__actions > button app-icon {
+  font-size: 1.12rem;
+}
+
+.icon-button app-icon {
+  font-size: 1.05rem;
 }
 
 .cart-item__actions > button:hover {
@@ -197,17 +208,19 @@ h2 {
 }
 
 .icon-button {
-  min-width: 2.85rem;
-  min-height: 2.45rem;
+  display: grid;
+  width: 2.45rem;
+  height: 2.45rem;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-pill);
+  border-radius: 50%;
   background: rgba(255, 255, 255, 0.78);
   color: var(--color-text);
   cursor: pointer;
   font: inherit;
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   font-weight: 850;
-  padding: 0 0.82rem;
+  padding: 0;
+  place-items: center;
   transition:
     background 180ms ease,
     border-color 180ms ease,

@@ -1,5 +1,5 @@
-import { CurrencyPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { CurrencyPipe, DOCUMENT } from '@angular/common';
+import { Component, DestroyRef, effect, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { CartService } from '../../../core/services/cart.service';
@@ -14,7 +14,19 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
   styleUrl: './cart-drawer.component.scss',
 })
 export class CartDrawerComponent {
+  private readonly document = inject(DOCUMENT);
+  private readonly destroyRef = inject(DestroyRef);
   protected readonly cartService = inject(CartService);
+
+  constructor() {
+    effect(() => {
+      this.document.body.classList.toggle('cart-drawer-open', this.cartService.isDrawerOpen());
+    });
+
+    this.destroyRef.onDestroy(() => {
+      this.document.body.classList.remove('cart-drawer-open');
+    });
+  }
 
   close(): void {
     this.cartService.closeDrawer();

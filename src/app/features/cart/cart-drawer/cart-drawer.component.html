@@ -21,7 +21,7 @@
       </h2>
     </div>
     <button class="icon-button" type="button" aria-label="Close cart drawer" (click)="close()">
-      Close
+      <app-icon name="close" />
     </button>
   </header>
 
@@ -49,6 +49,7 @@
                 (valueChange)="updateQuantity(item.product.id, item.variantId, $event)"
               />
               <button type="button" (click)="remove(item.product.id, item.variantId)">
+                <app-icon name="trash" />
                 Remove
               </button>
             </div>
@@ -82,7 +83,9 @@
     </footer>
   } @else {
     <section class="cart-empty">
-      <div class="cart-empty__mark">VC</div>
+      <div class="cart-empty__mark">
+        <img src="vertex-mark.svg" alt="" />
+      </div>
       <p class="cart-empty__eyebrow">Curated setup pending</p>
       <h2>Your cart is empty</h2>
       <p>

@@ -2,6 +2,7 @@ import { Component, input } from '@angular/core';
 
 export type IconName =
   | 'cart'
+  | 'close'
   | 'search'
   | 'sort'
   | 'truck'

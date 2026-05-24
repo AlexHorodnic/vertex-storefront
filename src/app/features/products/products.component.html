@@ -1,4 +1,10 @@
 <section class="products-page">
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a routerLink="/">Home</a>
+    <span aria-hidden="true">/</span>
+    <span aria-current="page">Products</span>
+  </nav>
+
   <app-section-header
     eyebrow="Catalog"
     title="Curated premium electronics for modern work."
@@ -199,9 +205,7 @@
         </div>
       } @else if (filteredProducts().length > 0) {
         <div class="products-page__results">
-          <p class="products-page__count">
-            Showing {{ visibleProducts().length }} of {{ filteredProducts().length }} products
-          </p>
+          <p class="products-page__count">{{ filteredProducts().length }} products</p>
         </div>
         <app-product-grid [products]="visibleProducts()" />
         @if (isLoadingMore()) {

@@ -1,6 +1,6 @@
 import { Component, HostListener, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { CATALOG_CATEGORY_FILTERS } from '../../core/constants/storefront.constants';
 import {
@@ -31,6 +31,7 @@ type PriceHandle = 'min' | 'max';
   selector: 'app-products',
   imports: [
     FormsModule,
+    RouterLink,
     EmptyStateComponent,
     IconComponent,
     ProductGridComponent,
