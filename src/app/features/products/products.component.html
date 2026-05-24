@@ -177,9 +177,12 @@
           </div>
         </div>
 
-        <button class="price-presets__reset" type="button" (click)="resetFilters()">
-          Reset filters
-        </button>
+        @if (hasActiveFilters()) {
+          <button class="price-presets__reset" type="button" (click)="resetFilters()">
+            <app-icon name="reset" />
+            Reset filters
+          </button>
+        }
       </form>
     </aside>
 

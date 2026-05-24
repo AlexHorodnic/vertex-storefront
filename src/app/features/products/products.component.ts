@@ -77,6 +77,19 @@ export class ProductsComponent {
     () =>
       this.sortOptions.find((option) => option.value === this.filters().sort)?.label ?? 'Featured',
   );
+  protected readonly hasActiveFilters = computed(() => {
+    const filters = this.filters();
+    const defaults = this.defaultFilters();
+
+    return (
+      filters.searchTerm.trim() !== defaults.searchTerm ||
+      filters.categoryId !== defaults.categoryId ||
+      filters.collectionId !== defaults.collectionId ||
+      filters.sort !== defaults.sort ||
+      filters.priceRange.min !== defaults.priceRange.min ||
+      filters.priceRange.max !== defaults.priceRange.max
+    );
+  });
   protected readonly filteredProducts = computed(() =>
     filterProducts(this.productService.products(), this.filters()),
   );

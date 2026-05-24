@@ -25,13 +25,14 @@
     </div>
 
     <div class="summary">
-      @if (item.badge; as badge) {
-        <app-badge>{{ badge }}</app-badge>
-      }
+      <div class="summary__eyebrow">
+        @if (item.badge; as badge) {
+          <app-badge>{{ badge }}</app-badge>
+        }
+        <span class="summary__category">{{ item.categoryName }}</span>
+      </div>
       <h1>{{ item.name }}</h1>
-      <span class="summary__category">{{ item.categoryName }}</span>
       <app-rating [rating]="item.rating" [reviewCount]="item.reviewCount" />
-      <p>{{ item.description }}</p>
       <app-price [amount]="item.price" [compareAt]="item.originalPrice" />
 
       <div [class]="stockClass()">
@@ -40,6 +41,8 @@
           item.stock > 0 ? item.stockStatus + ' - ' + item.stock + ' available' : item.stockStatus
         }}
       </div>
+
+      <p class="summary__description">{{ item.description }}</p>
 
       <div class="variants">
         <h2>{{ item.variants[0].label }}</h2>
@@ -57,72 +60,104 @@
         </div>
       </div>
 
-      <div class="purchase">
-        <app-quantity-selector
-          [value]="quantity()"
-          [max]="item.stock || 1"
-          (valueChange)="updateQuantity($event)"
-        />
-        <button class="button" type="button" (click)="addToCart()" [disabled]="item.stock === 0">
-          Add to cart
-        </button>
+      <div class="purchase-panel">
+        <div class="purchase">
+          <app-quantity-selector
+            [value]="quantity()"
+            [max]="item.stock || 1"
+            (valueChange)="updateQuantity($event)"
+          />
+          <button class="button" type="button" (click)="addToCart()" [disabled]="item.stock === 0">
+            Add to cart
+          </button>
+        </div>
+        <div class="payment-methods" aria-label="Accepted payment methods">
+          <span class="payment-methods__label">Accepted payments</span>
+          @for (method of paymentMethods; track method.name) {
+            <span class="payment-method" [class]="'payment-method payment-method--' + method.id">
+              <img [src]="method.iconPath" [alt]="method.name" loading="lazy" />
+            </span>
+          }
+        </div>
       </div>
 
       <div class="info-grid">
         <div>
-          <strong><app-icon name="truck" /> Fast delivery</strong>
-          <span>Free 2-4 day shipping over $150 with tracked dispatch.</span>
+          <strong><app-icon name="truck" /><span>Fast delivery</span></strong>
+          <span>Tracked 2-4 day shipping over $150.</span>
         </div>
         <div>
-          <strong><app-icon name="shield" /> Secure checkout</strong>
-          <span>Encrypted card, wallet, and installment-ready checkout.</span>
-          <div class="payment-methods" aria-label="Accepted payment methods">
-            <span>Visa</span>
-            <span>MC</span>
-            <span>PayPal</span>
-            <span>Apple Pay</span>
-            <span>G Pay</span>
-            <span>Klarna</span>
-          </div>
+          <strong><app-icon name="card" /><span>Secure checkout</span></strong>
+          <span>Encrypted cards, wallets, and installments.</span>
         </div>
         <div>
-          <strong><app-icon name="stock" /> Protection</strong>
-          <span>Two-year warranty with optional accidental damage coverage.</span>
+          <strong><app-icon name="shield" /><span>Protection</span></strong>
+          <span>Two-year warranty with coverage options.</span>
         </div>
         <div>
-          <strong><app-icon name="shield" /> Easy returns</strong>
-          <span>30-day returns with prepaid labels on eligible products.</span>
+          <strong><app-icon name="refresh" /><span>Easy returns</span></strong>
+          <span>30-day returns on eligible products.</span>
         </div>
         <div>
-          <strong><app-icon name="truck" /> Flexible payments</strong>
-          <span>Pay now, use wallets, or split larger setup purchases.</span>
+          <strong><app-icon name="wallet" /><span>Flexible payments</span></strong>
+          <span>Pay now or split larger setup purchases.</span>
         </div>
         <div>
-          <strong><app-icon name="spec" /> Expert support</strong>
-          <span>Setup guidance and product matching from the Vertex team.</span>
+          <strong><app-icon name="headset" /><span>Expert support</span></strong>
+          <span>Setup guidance from the Vertex team.</span>
         </div>
       </div>
     </div>
   </section>
 
   <section class="specs">
-    <h2>Product overview</h2>
-    <p>{{ item.longDescription }}</p>
+    <div class="specs__intro">
+      <h2>Product details</h2>
+      <p>{{ item.longDescription }}</p>
+    </div>
 
-    <h2>Product specs</h2>
-    <dl>
-      @for (spec of item.specs; track spec.label) {
-        <div>
-          <dt>{{ spec.label }}</dt>
-          <dd>{{ spec.value }}</dd>
-        </div>
-      }
-    </dl>
+    <div class="detail-sections">
+      <details open>
+        <summary>Specifications</summary>
+        <dl>
+          @for (spec of item.specs; track spec.label) {
+            <div>
+              <dt>{{ spec.label }}</dt>
+              <dd>{{ spec.value }}</dd>
+            </div>
+          }
+        </dl>
+      </details>
+      <details>
+        <summary>What's in the box</summary>
+        <p>{{ item.name }}, charging or connection cable, quick-start guide, and warranty card.</p>
+      </details>
+      <details>
+        <summary>Shipping & returns</summary>
+        <p>
+          Ships in 1-2 business days with tracked delivery. Returns are accepted within 30 days.
+        </p>
+      </details>
+      <details>
+        <summary>Warranty</summary>
+        <p>
+          Includes two-year Vertex protection with support for setup, diagnostics, and replacements.
+        </p>
+      </details>
+      <details>
+        <summary>Compatibility</summary>
+        <p>
+          Designed for modern desktop, mobile, and workspace ecosystems across macOS, Windows, iOS,
+          and Android where supported.
+        </p>
+      </details>
+    </div>
   </section>
 
   @if (relatedProducts().length > 0) {
     <section class="related">
-      <h2>Related products</h2>
+      <span class="related__eyebrow">Complete your setup</span>
+      <h2>You may also like</h2>
       <app-product-grid [products]="relatedProducts()" />
     </section>
   }

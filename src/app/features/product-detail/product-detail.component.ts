@@ -42,6 +42,14 @@ export class ProductDetailComponent {
   protected readonly isLightboxOpen = signal(false);
   protected readonly selectedVariantId = signal(this.storedVariantId());
   protected readonly quantity = signal(1);
+  protected readonly paymentMethods = [
+    { id: 'visa', name: 'Visa', iconPath: '/assets/icons/payment/visa.svg' },
+    { id: 'mastercard', name: 'Mastercard', iconPath: '/assets/icons/payment/mastercard.svg' },
+    { id: 'paypal', name: 'PayPal', iconPath: '/assets/icons/payment/paypal.svg' },
+    { id: 'applepay', name: 'Apple Pay', iconPath: '/assets/icons/payment/applepay.svg' },
+    { id: 'googlepay', name: 'Google Pay', iconPath: '/assets/icons/payment/googlepay.svg' },
+    { id: 'klarna', name: 'Klarna', iconPath: '/assets/icons/payment/klarna.svg' },
+  ] as const;
   protected readonly relatedProducts = computed(() => {
     const product = this.product();
     return product ? this.productService.getRelatedProducts(product) : [];

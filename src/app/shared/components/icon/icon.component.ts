@@ -2,9 +2,12 @@ import { Component, input } from '@angular/core';
 
 export type IconName =
   | 'cart'
+  | 'card'
   | 'chevron-left'
   | 'chevron-right'
   | 'close'
+  | 'headset'
+  | 'refresh'
   | 'search'
   | 'sort'
   | 'truck'
@@ -12,6 +15,8 @@ export type IconName =
   | 'trash'
   | 'minus'
   | 'plus'
+  | 'wallet'
+  | 'reset'
   | 'stock'
   | 'spec';
 
