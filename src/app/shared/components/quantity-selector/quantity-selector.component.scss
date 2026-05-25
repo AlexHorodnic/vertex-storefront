@@ -22,7 +22,8 @@ button {
 }
 
 button:hover:not(:disabled) {
-  background: var(--color-surface-strong);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-strong);
 }
 
 button app-icon {
