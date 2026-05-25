@@ -20,11 +20,13 @@
       <section class="express-checkout" aria-label="Express checkout">
         <div>
           <span>Express checkout</span>
-          <p>Demo wallet buttons only. No payment will be processed.</p>
+          <p>Demo wallet buttons only. No real payment will be processed.</p>
         </div>
         <div class="express-checkout__actions">
-          <button type="button">Apple Pay</button>
-          <button type="button">Google Pay</button>
+          <app-stripe-express-checkout
+            [total]="total()"
+            (walletSuccess)="walletPaymentSuccess.emit()"
+          />
         </div>
       </section>
 

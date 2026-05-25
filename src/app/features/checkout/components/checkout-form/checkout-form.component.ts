@@ -13,10 +13,11 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { CheckoutStep, DeliveryMethod } from '../../checkout.models';
 import { IconComponent } from '../../../../shared/components/icon/icon.component';
+import { StripeExpressCheckoutComponent } from '../stripe-express-checkout/stripe-express-checkout.component';
 
 @Component({
   selector: 'app-checkout-form',
-  imports: [CurrencyPipe, ReactiveFormsModule, IconComponent],
+  imports: [CurrencyPipe, ReactiveFormsModule, IconComponent, StripeExpressCheckoutComponent],
   templateUrl: './checkout-form.component.html',
   styleUrl: './checkout-form.component.scss',
 })
@@ -24,6 +25,7 @@ export class CheckoutFormComponent implements OnInit {
   private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   readonly form = input.required<FormGroup>();
   readonly subtotal = input.required<number>();
+  readonly total = input.required<number>();
   readonly discount = input(0);
   readonly selectedDelivery = input.required<DeliveryMethod>();
   readonly estimatedDelivery = input.required<string>();
@@ -32,6 +34,7 @@ export class CheckoutFormComponent implements OnInit {
   readonly isPlacingOrder = input(false);
   readonly stepChange = output<CheckoutStep>();
   readonly placeOrder = output<void>();
+  readonly walletPaymentSuccess = output<void>();
   protected readonly submitAttempted = signal(false);
 
   protected readonly shippingControls = [

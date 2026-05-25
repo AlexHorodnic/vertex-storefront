@@ -20,8 +20,6 @@ import { CheckoutPersistenceService } from '../services/checkout-persistence.ser
 
 const taxRate = 0.08;
 const expressShipping = 18;
-const demoCardNumber = '4242 4242 4242 4242';
-const demoCardCvc = '123';
 
 @Component({
   selector: 'app-checkout-page',
@@ -145,6 +143,31 @@ export class CheckoutPageComponent {
     }, 850);
   }
 
+  protected completeWalletOrder(): void {
+    if (this.isPlacingOrder() || this.items().length === 0) {
+      return;
+    }
+
+    this.isPlacingOrder.set(true);
+    const orderItems = [...this.items()];
+    const orderTotals = this.totals();
+
+    globalThis.setTimeout(() => {
+      this.confirmation.set({
+        orderNumber: this.createOrderNumber(),
+        estimatedDelivery: this.estimatedDeliveryLabel(),
+        items: orderItems,
+        totals: orderTotals,
+      });
+
+      this.cartService.clearCart();
+      this.checkoutPersistence.clearShipping();
+      this.hasSavedShippingData.set(false);
+      this.isPlacingOrder.set(false);
+      globalThis.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 450);
+  }
+
   protected setStep(step: CheckoutStep): void {
     if (this.canVisitStep(step)) {
       this.currentStep.set(step);
@@ -246,18 +269,6 @@ export class CheckoutPageComponent {
 
     this.checkoutForm.patchValue(savedShipping, { emitEvent: false });
 
-    if (savedShipping.payment) {
-      this.checkoutForm.patchValue(
-        {
-          cardholderName: savedShipping.payment.cardholderName,
-          expiry: savedShipping.payment.expiry,
-          cardNumber: savedShipping.payment.isDemoPaymentComplete ? demoCardNumber : '',
-          cvc: savedShipping.payment.isDemoPaymentComplete ? demoCardCvc : '',
-        },
-        { emitEvent: false },
-      );
-    }
-
     this.selectedDelivery.set(savedShipping.deliveryMethod);
     this.hasSavedShippingData.set(true);
   }
@@ -277,16 +288,6 @@ export class CheckoutPageComponent {
       postalCode: rawValue.postalCode,
       country: rawValue.country,
       deliveryMethod: rawValue.deliveryMethod,
-      payment: {
-        cardholderName: rawValue.cardholderName,
-        expiry: rawValue.expiry,
-        isDemoPaymentComplete: this.stepControlsValid([
-          'cardholderName',
-          'cardNumber',
-          'expiry',
-          'cvc',
-        ]),
-      },
     };
   }
 

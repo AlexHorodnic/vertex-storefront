@@ -51,6 +51,7 @@
       <app-checkout-form
         [form]="checkoutForm"
         [subtotal]="totals().subtotal"
+        [total]="totals().total"
         [discount]="totals().discount"
         [selectedDelivery]="selectedDelivery()"
         [estimatedDelivery]="estimatedDeliveryLabel()"
@@ -59,6 +60,7 @@
         [isPlacingOrder]="isPlacingOrder()"
         (stepChange)="setStep($event)"
         (placeOrder)="placeOrder()"
+        (walletPaymentSuccess)="completeWalletOrder()"
       />
 
       <app-order-summary

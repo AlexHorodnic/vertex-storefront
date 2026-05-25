@@ -1,0 +1,45 @@
+<div
+  class="stripe-wallet"
+  [class.stripe-wallet--loading]="state() === 'loading'"
+  [class.stripe-wallet--ready]="state() === 'ready'"
+  [class.stripe-wallet--unavailable]="state() === 'unavailable'"
+  [class.stripe-wallet--processing]="state() === 'processing'"
+  [class.stripe-wallet--success]="state() === 'success'"
+  [class.stripe-wallet--error]="state() === 'error'"
+>
+  @if (state() === 'unavailable') {
+    <div class="stripe-wallet__fallback" aria-label="Demo wallet options unavailable">
+      <p class="stripe-wallet__message" aria-live="polite">
+        {{ message() }}
+        <span class="stripe-wallet__tooltip">
+          <span tabindex="0" aria-label="Wallet browser requirements">i</span>
+          <small role="tooltip">
+            Apple Pay requires Safari with Apple Pay set up. Google Pay requires a supported
+            browser and wallet.
+          </small>
+        </span>
+      </p>
+    </div>
+  } @else {
+    <div class="stripe-wallet__element" #expressElement></div>
+
+    @if (state() === 'loading' || state() === 'processing') {
+      <div class="stripe-wallet__overlay" aria-live="polite">
+        <span class="stripe-wallet__spinner" aria-hidden="true"></span>
+        <span>{{ message() }}</span>
+      </div>
+    }
+
+    @if (state() === 'success') {
+      <p class="stripe-wallet__message stripe-wallet__message--success" aria-live="polite">
+        {{ message() }}
+      </p>
+    } @else if (state() === 'error') {
+      <p class="stripe-wallet__message stripe-wallet__message--error" aria-live="polite">
+        {{ message() }}
+      </p>
+    } @else {
+      <p class="stripe-wallet__message" aria-live="polite">{{ message() }}</p>
+    }
+  }
+</div>

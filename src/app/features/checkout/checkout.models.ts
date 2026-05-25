@@ -37,11 +37,4 @@ export interface PersistedCheckoutShipping {
   readonly postalCode: string;
   readonly country: string;
   readonly deliveryMethod: DeliveryMethod;
-  readonly payment?: PersistedCheckoutPayment;
-}
-
-export interface PersistedCheckoutPayment {
-  readonly cardholderName: string;
-  readonly expiry: string;
-  readonly isDemoPaymentComplete: boolean;
 }
