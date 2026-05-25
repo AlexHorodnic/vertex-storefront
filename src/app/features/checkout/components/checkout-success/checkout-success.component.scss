@@ -1,0 +1,112 @@
+:host {
+  display: block;
+}
+
+.checkout-success {
+  display: grid;
+  min-height: min(42rem, calc(100vh - 7rem));
+  padding: clamp(2rem, 6vw, 4rem) var(--container-padding);
+  place-items: center;
+}
+
+.checkout-success__card {
+  display: grid;
+  justify-items: center;
+  width: min(100%, 44rem);
+  padding: clamp(1.6rem, 5vw, 3rem);
+  border: 1px solid rgba(13, 71, 161, 0.12);
+  border-radius: var(--radius-xl);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(144, 202, 249, 0.24), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(247, 251, 255, 0.86)), #fff;
+  box-shadow: var(--shadow-card);
+  text-align: center;
+}
+
+.checkout-success__mark {
+  display: grid;
+  width: 4.6rem;
+  height: 4.6rem;
+  margin-bottom: 1.1rem;
+  border-radius: 1.35rem;
+  background: var(--color-accent-soft);
+  color: var(--color-accent-strong);
+  font-size: 2.2rem;
+  place-items: center;
+}
+
+.checkout-success__card > span {
+  color: var(--color-accent);
+  font-size: 0.76rem;
+  font-weight: 950;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h1 {
+  max-width: 10ch;
+  margin: 0.45rem 0 0.7rem;
+  font-size: clamp(2.3rem, 6vw, 4.6rem);
+  letter-spacing: -0.065em;
+  line-height: 0.96;
+}
+
+p {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.65;
+}
+
+dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+  width: 100%;
+  margin: 1.5rem 0;
+}
+
+dl div {
+  padding: 0.85rem;
+  border: 1px solid rgba(13, 71, 161, 0.1);
+  border-radius: 0.95rem;
+  background: rgba(255, 255, 255, 0.68);
+}
+
+dt,
+dd {
+  margin: 0;
+}
+
+dt {
+  color: var(--color-muted);
+  font-size: 0.76rem;
+  font-weight: 850;
+}
+
+dd {
+  margin-top: 0.2rem;
+  font-size: 1rem;
+  font-weight: 920;
+}
+
+.checkout-success__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  justify-content: center;
+}
+
+@media (max-width: 620px) {
+  dl {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-success__actions {
+    width: 100%;
+  }
+
+  .checkout-success__actions .button {
+    width: 100%;
+  }
+}

@@ -1,0 +1,60 @@
+@if (confirmation(); as order) {
+  <app-checkout-success [confirmation]="order" />
+} @else if (items().length === 0) {
+  <section class="checkout-empty">
+    <app-empty-state
+      title="Your checkout is empty"
+      message="Add premium tech to your cart before starting checkout."
+    >
+      <a class="button" routerLink="/products">Browse products</a>
+    </app-empty-state>
+  </section>
+} @else {
+  <main class="checkout-page">
+    <nav class="checkout-breadcrumbs" aria-label="Breadcrumb">
+      <a routerLink="/">Home</a>
+      <span aria-hidden="true">/</span>
+      <a routerLink="/products">Products</a>
+      <span aria-hidden="true">/</span>
+      <span>Checkout</span>
+    </nav>
+
+    <header class="checkout-hero">
+      <span>Secure demo checkout</span>
+      <h1>Complete your Vertex order.</h1>
+      <p>
+        Demo checkout only. No real payment will be processed, and no payment details are stored.
+      </p>
+    </header>
+
+    <ol class="checkout-progress" aria-label="Checkout progress">
+      @for (step of checkoutSteps; track step.id) {
+        <li
+          [class]="stepState(step.id)"
+          [attr.aria-current]="currentStep() === step.id ? 'step' : null"
+        >
+          <button type="button" [disabled]="!canVisitStep(step.id)" (click)="setStep(step.id)">
+            {{ step.label }}
+          </button>
+        </li>
+      }
+    </ol>
+
+    <div class="checkout-layout">
+      <app-checkout-form
+        [form]="checkoutForm"
+        [subtotal]="totals().subtotal"
+        [selectedDelivery]="selectedDelivery()"
+        [currentStep]="currentStep()"
+        (stepChange)="setStep($event)"
+        (placeOrder)="placeOrder()"
+      />
+
+      <app-order-summary
+        [items]="items()"
+        [totals]="totals()"
+        [variantLabel]="variantLabel.bind(this)"
+      />
+    </div>
+  </main>
+}

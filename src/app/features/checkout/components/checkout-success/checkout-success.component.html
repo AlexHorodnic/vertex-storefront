@@ -1,0 +1,33 @@
+<main class="checkout-success">
+  <section class="checkout-success__card">
+    <div class="checkout-success__mark" aria-hidden="true">
+      <app-icon name="package" />
+    </div>
+    <span>Mock order confirmed</span>
+    <h1>Your Vertex setup is reserved.</h1>
+    <p>
+      Order {{ confirmation().orderNumber }} has been created for this demo flow. No payment was
+      processed.
+    </p>
+
+    <dl>
+      <div>
+        <dt>Estimated delivery</dt>
+        <dd>{{ confirmation().estimatedDelivery }}</dd>
+      </div>
+      <div>
+        <dt>Items</dt>
+        <dd>{{ confirmation().items.length }}</dd>
+      </div>
+      <div>
+        <dt>Total</dt>
+        <dd>{{ confirmation().totals.total | currency: 'USD' : 'symbol' : '1.0-0' }}</dd>
+      </div>
+    </dl>
+
+    <div class="checkout-success__actions">
+      <a class="button" routerLink="/products">Continue shopping</a>
+      <a class="button button--ghost" routerLink="/">Back home</a>
+    </div>
+  </section>
+</main>

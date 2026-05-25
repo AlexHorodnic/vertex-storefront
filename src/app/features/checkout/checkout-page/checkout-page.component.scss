@@ -1,0 +1,166 @@
+:host {
+  display: block;
+}
+
+.checkout-page {
+  width: min(calc(100% - (var(--container-padding) * 2)), var(--container-max));
+  margin: 0 auto;
+  padding: clamp(1rem, 2.8vw, 1.8rem) 0 clamp(3rem, 6vw, 5rem);
+}
+
+.checkout-breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+  margin-bottom: clamp(1.4rem, 3vw, 2rem);
+  color: var(--color-muted);
+  font-size: 0.82rem;
+}
+
+.checkout-breadcrumbs a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+
+.checkout-breadcrumbs a:hover {
+  color: var(--color-accent);
+}
+
+.checkout-hero {
+  display: grid;
+  gap: 0.45rem;
+  max-width: 46rem;
+  margin-bottom: clamp(1.4rem, 3vw, 2.2rem);
+}
+
+.checkout-hero span {
+  color: var(--color-accent);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.checkout-hero h1 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: clamp(2.2rem, 5vw, 4.2rem);
+  letter-spacing: -0.06em;
+  line-height: 0.98;
+}
+
+.checkout-hero p {
+  max-width: 39rem;
+  margin: 0;
+  color: var(--color-muted);
+  font-size: clamp(0.98rem, 1.5vw, 1.08rem);
+  line-height: 1.65;
+}
+
+.checkout-progress {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  margin: 0 0 clamp(1rem, 2.4vw, 1.6rem);
+  padding: 0.58rem;
+  border: 1px solid rgba(13, 71, 161, 0.09);
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.92) inset,
+    0 0.65rem 1.6rem rgba(13, 71, 161, 0.045);
+  list-style: none;
+}
+
+.checkout-progress li {
+  position: relative;
+  display: grid;
+  min-height: 2.15rem;
+  place-items: center;
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.checkout-progress li + li::before {
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 1rem;
+  background: rgba(13, 71, 161, 0.1);
+  content: '';
+}
+
+.checkout-progress button {
+  display: inline-flex;
+  align-items: center;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  font-weight: inherit;
+  padding: 0.38rem 0.75rem;
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.checkout-progress button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.checkout-progress .is-complete button,
+.checkout-progress .is-available button {
+  color: var(--color-accent-strong);
+}
+
+.checkout-progress .is-current button {
+  background: var(--color-accent-strong);
+  color: #fff;
+  box-shadow: 0 0.55rem 1.2rem rgba(13, 71, 161, 0.16);
+}
+
+.checkout-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(20rem, 25rem);
+  gap: clamp(1rem, 2.4vw, 1.6rem);
+  align-items: start;
+}
+
+.checkout-empty {
+  width: min(calc(100% - (var(--container-padding) * 2)), var(--container-max-narrow));
+  margin: 0 auto;
+  padding: clamp(2rem, 6vw, 4rem) 0;
+}
+
+@media (max-width: 980px) {
+  .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .checkout-page {
+    width: min(calc(100% - 2rem), var(--container-max));
+    padding-top: 0.8rem;
+  }
+
+  .checkout-hero h1 {
+    font-size: clamp(2rem, 12vw, 3rem);
+  }
+
+  .checkout-progress {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-radius: 1.1rem;
+  }
+
+  .checkout-progress li:nth-child(3)::before {
+    display: none;
+  }
+}

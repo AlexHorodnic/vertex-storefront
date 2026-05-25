@@ -1,6 +1,6 @@
 import { CurrencyPipe, DOCUMENT } from '@angular/common';
 import { Component, DestroyRef, effect, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { CartService } from '../../../core/services/cart.service';
 import { CartItem } from '../../../core/models/cart.model';
@@ -16,6 +16,7 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
 export class CartDrawerComponent {
   private readonly document = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly router = inject(Router);
   protected readonly cartService = inject(CartService);
 
   constructor() {
@@ -38,6 +39,11 @@ export class CartDrawerComponent {
 
   updateQuantity(productId: string, variantId: string, quantity: number): void {
     this.cartService.updateQuantity(productId, variantId, quantity);
+  }
+
+  checkout(): void {
+    this.cartService.closeDrawer();
+    void this.router.navigate(['/checkout']);
   }
 
   variantLabel(item: CartItem): string {

@@ -1,0 +1,75 @@
+<aside class="order-summary" aria-label="Order summary">
+  <div class="order-summary__header">
+    <div>
+      <span>Order summary</span>
+      <h2>{{ items().length }} {{ items().length === 1 ? 'item' : 'items' }}</h2>
+    </div>
+    <app-icon name="cart" />
+  </div>
+
+  <div class="summary-items">
+    @for (item of items(); track item.product.id + item.variantId) {
+      <article>
+        <img [src]="item.product.imageUrl" [alt]="item.product.name" />
+        <div>
+          <h3>{{ item.product.name }}</h3>
+          <p>{{ variantLabel()(item) }} · Qty {{ item.quantity }}</p>
+          <strong>
+            {{ item.product.price * item.quantity | currency: 'USD' : 'symbol' : '1.0-0' }}
+          </strong>
+        </div>
+      </article>
+    }
+  </div>
+
+  <form class="promo-form">
+    <label for="promo-code">Promo code</label>
+    <div>
+      <input id="promo-code" type="text" placeholder="VERTEXDEMO" aria-describedby="promo-note" />
+      <button type="button">Apply</button>
+    </div>
+    <small id="promo-note">Promo UI only for this frontend checkout demo.</small>
+  </form>
+
+  <dl class="summary-totals">
+    <div>
+      <dt>Subtotal</dt>
+      <dd>{{ totals().subtotal | currency: 'USD' : 'symbol' : '1.0-0' }}</dd>
+    </div>
+    <div>
+      <dt>Shipping</dt>
+      <dd>
+        @if (totals().shipping === 0) {
+          Free
+        } @else {
+          {{ totals().shipping | currency: 'USD' : 'symbol' : '1.0-0' }}
+        }
+      </dd>
+    </div>
+    <div>
+      <dt>Estimated tax</dt>
+      <dd>{{ totals().tax | currency: 'USD' : 'symbol' : '1.0-0' }}</dd>
+    </div>
+    <div class="summary-totals__total">
+      <dt>Total</dt>
+      <dd>{{ totals().total | currency: 'USD' : 'symbol' : '1.0-0' }}</dd>
+    </div>
+  </dl>
+
+  <div class="summary-payments" aria-label="Accepted payments">
+    <span>Accepted payments</span>
+    <div>
+      @for (method of paymentMethods; track method.id) {
+        <span class="summary-payment" [class]="'summary-payment summary-payment--' + method.id">
+          <img [src]="method.iconPath" [alt]="method.name" loading="lazy" />
+        </span>
+      }
+    </div>
+  </div>
+
+  <div class="summary-trust">
+    <p><app-icon name="shield" /> Secure demo checkout</p>
+    <p><app-icon name="refresh" /> 30-day returns</p>
+    <p><app-icon name="truck" /> Tracked delivery</p>
+  </div>
+</aside>

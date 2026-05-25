@@ -1,0 +1,200 @@
+import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormBuilder, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+
+import { CartService } from '../../../core/services/cart.service';
+import { CartItem } from '../../../core/models/cart.model';
+import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
+import { CheckoutFormComponent } from '../components/checkout-form/checkout-form.component';
+import { CheckoutSuccessComponent } from '../components/checkout-success/checkout-success.component';
+import { OrderSummaryComponent } from '../components/order-summary/order-summary.component';
+import { CheckoutConfirmation, CheckoutStep, DeliveryMethod } from '../checkout.models';
+
+const taxRate = 0.08;
+const expressShipping = 18;
+
+@Component({
+  selector: 'app-checkout-page',
+  imports: [
+    RouterLink,
+    EmptyStateComponent,
+    CheckoutFormComponent,
+    CheckoutSuccessComponent,
+    OrderSummaryComponent,
+  ],
+  templateUrl: './checkout-page.component.html',
+  styleUrl: './checkout-page.component.scss',
+})
+export class CheckoutPageComponent {
+  private readonly formBuilder = inject(FormBuilder);
+  private readonly cartService = inject(CartService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  protected readonly items = this.cartService.items;
+  protected readonly selectedDelivery = signal<DeliveryMethod>('standard');
+  protected readonly confirmation = signal<CheckoutConfirmation | null>(null);
+  protected readonly currentStep = signal<CheckoutStep>('shipping');
+  protected readonly checkoutSteps: readonly { id: CheckoutStep; label: string }[] = [
+    { id: 'cart', label: 'Cart' },
+    { id: 'shipping', label: 'Shipping' },
+    { id: 'payment', label: 'Payment' },
+    { id: 'review', label: 'Review' },
+  ];
+
+  protected readonly checkoutForm = this.formBuilder.nonNullable.group({
+    email: ['', [Validators.required, Validators.email]],
+    phoneCountry: ['US', Validators.required],
+    phoneLocal: [
+      '',
+      [Validators.required, Validators.minLength(6), Validators.pattern(/^[0-9 ]+$/)],
+    ],
+    phone: ['+1 ', [Validators.required, Validators.pattern(/^\+\d{1,4}\s\d[\d\s]{5,17}$/)]],
+    firstName: ['', Validators.required],
+    lastName: ['', Validators.required],
+    address: ['', Validators.required],
+    city: ['', Validators.required],
+    postalCode: ['', Validators.required],
+    country: ['United States', Validators.required],
+    deliveryMethod: ['standard' as DeliveryMethod, Validators.required],
+    cardholderName: ['', Validators.required],
+    cardNumber: ['', [Validators.required, Validators.pattern(/^[0-9 ]{15,23}$/)]],
+    expiry: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/)]],
+    cvc: ['', [Validators.required, Validators.pattern(/^\d{3,4}$/)]],
+    reviewOrder: [false, Validators.requiredTrue],
+    promoCode: [''],
+  });
+
+  protected readonly totals = computed(() => {
+    const subtotal = this.cartService.totals().subtotal;
+    const shipping = this.selectedDelivery() === 'express' ? expressShipping : 0;
+    const tax = Math.round(subtotal * taxRate);
+
+    return {
+      subtotal,
+      shipping,
+      tax,
+      total: subtotal + shipping + tax,
+    };
+  });
+
+  constructor() {
+    this.checkoutForm.controls.deliveryMethod.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((method) => {
+        this.selectedDelivery.set(method);
+      });
+  }
+
+  protected placeOrder(): void {
+    if (this.checkoutForm.invalid || this.items().length === 0) {
+      this.checkoutForm.markAllAsTouched();
+      return;
+    }
+
+    const orderItems = [...this.items()];
+    const orderTotals = this.totals();
+
+    this.confirmation.set({
+      orderNumber: this.createOrderNumber(),
+      estimatedDelivery: this.estimatedDeliveryLabel(),
+      items: orderItems,
+      totals: orderTotals,
+    });
+
+    this.cartService.clearCart();
+    globalThis.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  protected setStep(step: CheckoutStep): void {
+    if (this.canVisitStep(step)) {
+      this.currentStep.set(step);
+      globalThis.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  protected canVisitStep(step: CheckoutStep): boolean {
+    if (step === 'cart' || step === 'shipping') {
+      return true;
+    }
+
+    if (step === 'payment') {
+      return this.stepControlsValid([
+        'email',
+        'phoneCountry',
+        'phoneLocal',
+        'phone',
+        'firstName',
+        'lastName',
+        'address',
+        'city',
+        'postalCode',
+        'country',
+        'deliveryMethod',
+      ]);
+    }
+
+    return this.stepControlsValid([
+      'email',
+      'phoneCountry',
+      'phoneLocal',
+      'phone',
+      'firstName',
+      'lastName',
+      'address',
+      'city',
+      'postalCode',
+      'country',
+      'deliveryMethod',
+      'cardholderName',
+      'cardNumber',
+      'expiry',
+      'cvc',
+    ]);
+  }
+
+  protected stepState(step: CheckoutStep): string {
+    const currentIndex = this.stepIndex(this.currentStep());
+    const stepIndex = this.stepIndex(step);
+
+    if (stepIndex < currentIndex) {
+      return 'is-complete';
+    }
+
+    if (stepIndex === currentIndex) {
+      return 'is-current';
+    }
+
+    return this.canVisitStep(step) ? 'is-available' : '';
+  }
+
+  protected variantLabel(item: CartItem): string {
+    return (
+      item.product.variants.find((variant) => variant.id === item.variantId)?.value ?? 'Standard'
+    );
+  }
+
+  private createOrderNumber(): string {
+    return `VX-${Date.now().toString().slice(-6)}`;
+  }
+
+  private stepIndex(step: CheckoutStep): number {
+    return this.checkoutSteps.findIndex((checkoutStep) => checkoutStep.id === step);
+  }
+
+  private stepControlsValid(controlNames: readonly string[]): boolean {
+    return controlNames.every((controlName) => this.checkoutForm.get(controlName)?.valid);
+  }
+
+  private estimatedDeliveryLabel(): string {
+    const daysToAdd = this.selectedDelivery() === 'express' ? 2 : 4;
+    const deliveryDate = new Date();
+    deliveryDate.setDate(deliveryDate.getDate() + daysToAdd);
+
+    return new Intl.DateTimeFormat('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+    }).format(deliveryDate);
+  }
+}

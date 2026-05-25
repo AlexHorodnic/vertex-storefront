@@ -74,7 +74,7 @@
         <span>Subtotal</span>
         <strong>{{ cartService.totals().subtotal | currency: 'USD' : 'symbol' : '1.0-0' }}</strong>
       </div>
-      <button class="button" type="button">Checkout</button>
+      <button class="button" type="button" (click)="checkout()">Checkout</button>
       @if (cartService.totals().itemCount > 1) {
         <button class="cart-clear" type="button" (click)="cartService.clearCart()">
           Clear cart
