@@ -1,6 +1,6 @@
 :host {
   position: sticky;
-  top: 1.15rem;
+  top: 5.85rem;
   display: block;
 }
 
@@ -63,7 +63,7 @@
 
 .summary-items {
   display: grid;
-  gap: 0.72rem;
+  gap: 0.85rem;
   max-height: 24rem;
   overflow: auto;
   padding: 0.15rem 0.25rem 0.2rem 0;
@@ -72,10 +72,38 @@
 .summary-items article {
   display: grid;
   grid-template-columns: 5rem minmax(0, 1fr);
-  gap: 0.82rem;
+  gap: 0.95rem;
   align-items: center;
   padding-bottom: 0.72rem;
   border-bottom: 1px solid rgba(13, 71, 161, 0.08);
+}
+
+.summary-delivery {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.08rem 0.58rem;
+  align-items: center;
+  padding: 0.72rem;
+  border: 1px solid rgba(13, 71, 161, 0.08);
+  border-radius: 0.92rem;
+  background: rgba(225, 245, 254, 0.3);
+}
+
+.summary-delivery app-icon {
+  grid-row: 1 / span 2;
+  color: var(--color-accent);
+  font-size: 1.1rem;
+}
+
+.summary-delivery span {
+  color: var(--color-muted);
+  font-size: 0.72rem;
+  font-weight: 820;
+}
+
+.summary-delivery strong {
+  color: var(--color-text);
+  font-size: 0.9rem;
 }
 
 .summary-items article:last-child {
@@ -158,9 +186,40 @@
   padding: 0 0.9rem;
 }
 
+.promo-form input:focus,
+.promo-form button:focus-visible {
+  border-color: rgba(25, 118, 210, 0.34);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+  outline: 0;
+}
+
+.promo-form button:disabled {
+  cursor: wait;
+  opacity: 0.68;
+}
+
 .promo-form small {
   color: var(--color-muted);
   font-size: 0.72rem;
+}
+
+.promo-form.is-success {
+  border-color: rgba(13, 95, 74, 0.2);
+  background: var(--color-success-soft);
+}
+
+.promo-form.is-success small,
+.summary-totals__discount dd {
+  color: var(--color-success);
+}
+
+.promo-form.is-invalid {
+  border-color: rgba(180, 35, 24, 0.2);
+  background: rgba(255, 250, 250, 0.9);
+}
+
+.promo-form.is-invalid small {
+  color: var(--color-danger);
 }
 
 .summary-totals {
@@ -204,11 +263,6 @@
   letter-spacing: -0.035em;
 }
 
-.summary-payments {
-  display: grid;
-  gap: 0.58rem;
-}
-
 .summary-payments > div {
   display: flex;
   flex-wrap: nowrap;
@@ -238,33 +292,15 @@
 
 .summary-payment--applepay img,
 .summary-payment--googlepay img {
-  height: 1.16rem;
+  height: 1.8rem;
 }
 
 .summary-payment--visa img {
-  height: 1.08rem;
+  height: 2rem;
 }
 
-.summary-trust {
-  display: grid;
-  gap: 0.42rem;
-  padding-top: 0.82rem;
-  border-top: 1px solid rgba(13, 71, 161, 0.09);
-}
-
-.summary-trust p {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-  margin: 0;
-  color: var(--color-muted);
-  font-size: 0.82rem;
-  font-weight: 720;
-}
-
-.summary-trust app-icon {
-  color: var(--color-accent);
-  font-size: 1rem;
+.summary-payment--mastercard img {
+  height: 1.5rem;
 }
 
 @media (max-width: 980px) {

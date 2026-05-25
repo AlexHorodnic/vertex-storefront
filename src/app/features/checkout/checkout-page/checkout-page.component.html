@@ -34,7 +34,14 @@
           [attr.aria-current]="currentStep() === step.id ? 'step' : null"
         >
           <button type="button" [disabled]="!canVisitStep(step.id)" (click)="setStep(step.id)">
-            {{ step.label }}
+            <span aria-hidden="true">
+              @if (stepState(step.id) === 'is-complete') {
+                ✓
+              } @else {
+                {{ $index + 1 }}
+              }
+            </span>
+            <strong>{{ step.label }}</strong>
           </button>
         </li>
       }
@@ -44,8 +51,12 @@
       <app-checkout-form
         [form]="checkoutForm"
         [subtotal]="totals().subtotal"
+        [discount]="totals().discount"
         [selectedDelivery]="selectedDelivery()"
+        [estimatedDelivery]="estimatedDeliveryLabel()"
         [currentStep]="currentStep()"
+        [shippingDataSaved]="hasSavedShippingData()"
+        [isPlacingOrder]="isPlacingOrder()"
         (stepChange)="setStep($event)"
         (placeOrder)="placeOrder()"
       />
@@ -53,7 +64,9 @@
       <app-order-summary
         [items]="items()"
         [totals]="totals()"
+        [estimatedDelivery]="estimatedDeliveryLabel()"
         [variantLabel]="variantLabel.bind(this)"
+        (promoApplied)="applyPromoDiscount($event)"
       />
     </div>
   </main>

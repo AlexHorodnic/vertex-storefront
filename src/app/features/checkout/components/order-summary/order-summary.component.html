@@ -22,13 +22,35 @@
     }
   </div>
 
-  <form class="promo-form">
+  <div class="summary-delivery">
+    <app-icon name="truck" />
+    <span>Estimated delivery</span>
+    <strong>{{ estimatedDelivery() }}</strong>
+  </div>
+
+  <form class="promo-form" (ngSubmit)="applyPromo()" [class]="'promo-form is-' + promoState()">
     <label for="promo-code">Promo code</label>
     <div>
-      <input id="promo-code" type="text" placeholder="VERTEXDEMO" aria-describedby="promo-note" />
-      <button type="button">Apply</button>
+      <input
+        id="promo-code"
+        type="text"
+        [formControl]="promoCode"
+        placeholder="VERTEXDEMO"
+        aria-describedby="promo-note"
+        autocomplete="off"
+        (input)="updatePromo()"
+      />
+      <button type="submit" [disabled]="promoState() === 'loading'">
+        @if (promoState() === 'loading') {
+          Applying...
+        } @else if (promoState() === 'success') {
+          Applied
+        } @else {
+          Apply
+        }
+      </button>
     </div>
-    <small id="promo-note">Promo UI only for this frontend checkout demo.</small>
+    <small id="promo-note">{{ promoMessage() }}</small>
   </form>
 
   <dl class="summary-totals">
@@ -36,6 +58,12 @@
       <dt>Subtotal</dt>
       <dd>{{ totals().subtotal | currency: 'USD' : 'symbol' : '1.0-0' }}</dd>
     </div>
+    @if (totals().discount > 0) {
+      <div class="summary-totals__discount">
+        <dt>Promo savings</dt>
+        <dd>-{{ totals().discount | currency: 'USD' : 'symbol' : '1.0-0' }}</dd>
+      </div>
+    }
     <div>
       <dt>Shipping</dt>
       <dd>
@@ -57,7 +85,6 @@
   </dl>
 
   <div class="summary-payments" aria-label="Accepted payments">
-    <span>Accepted payments</span>
     <div>
       @for (method of paymentMethods; track method.id) {
         <span class="summary-payment" [class]="'summary-payment summary-payment--' + method.id">
@@ -67,9 +94,4 @@
     </div>
   </div>
 
-  <div class="summary-trust">
-    <p><app-icon name="shield" /> Secure demo checkout</p>
-    <p><app-icon name="refresh" /> 30-day returns</p>
-    <p><app-icon name="truck" /> Tracked delivery</p>
-  </div>
 </aside>

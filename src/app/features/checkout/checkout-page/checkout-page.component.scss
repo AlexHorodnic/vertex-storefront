@@ -60,6 +60,7 @@
 }
 
 .checkout-progress {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0;
@@ -76,6 +77,7 @@
 
 .checkout-progress li {
   position: relative;
+  z-index: 1;
   display: grid;
   min-height: 2.15rem;
   place-items: center;
@@ -84,21 +86,37 @@
   font-weight: 850;
 }
 
-.checkout-progress li + li::before {
+.checkout-progress li::after {
   position: absolute;
+  z-index: 0;
+  top: 50%;
+  right: 0;
   left: 0;
-  width: 1px;
-  height: 1rem;
-  background: rgba(13, 71, 161, 0.1);
+  height: 2px;
+  border-radius: var(--radius-pill);
+  background: rgba(13, 71, 161, 0.08);
   content: '';
+  transform: translateY(-50%);
+}
+
+.checkout-progress li:first-child::after {
+  left: 50%;
+}
+
+.checkout-progress li:last-child::after {
+  right: 50%;
 }
 
 .checkout-progress button {
-  display: inline-flex;
+  position: relative;
+  z-index: 1;
+  display: inline-grid;
+  grid-template-columns: auto minmax(0, auto);
   align-items: center;
+  gap: 0.48rem;
   border: 0;
   border-radius: var(--radius-pill);
-  background: transparent;
+  background: rgba(255, 255, 255, 0.88);
   color: inherit;
   cursor: pointer;
   font: inherit;
@@ -107,12 +125,40 @@
   transition:
     background 180ms ease,
     color 180ms ease,
-    box-shadow 180ms ease;
+    box-shadow 180ms ease,
+    transform 180ms ease;
+}
+
+.checkout-progress button span {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 50%;
+  background: rgba(13, 71, 161, 0.08);
+  color: var(--color-accent-strong);
+  font-size: 0.72rem;
+  font-weight: 950;
+  place-items: center;
+}
+
+.checkout-progress button strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .checkout-progress button:disabled {
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--color-muted);
   cursor: not-allowed;
-  opacity: 0.48;
+}
+
+.checkout-progress button:disabled span,
+.checkout-progress button:disabled strong {
+  opacity: 0.52;
 }
 
 .checkout-progress .is-complete button,
@@ -121,9 +167,21 @@
 }
 
 .checkout-progress .is-current button {
+  background: linear-gradient(135deg, var(--color-accent-strong), var(--color-accent));
+  color: #fff;
+  box-shadow: none;
+  transform: translateY(-1px);
+}
+
+.checkout-progress .is-complete button span {
   background: var(--color-accent-strong);
   color: #fff;
-  box-shadow: 0 0.55rem 1.2rem rgba(13, 71, 161, 0.16);
+  font-size: 0.82rem;
+}
+
+.checkout-progress .is-current button span {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
 }
 
 .checkout-layout {
@@ -158,6 +216,15 @@
   .checkout-progress {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     border-radius: 1.1rem;
+    padding: 0.42rem;
+  }
+
+  .checkout-progress::before {
+    display: none;
+  }
+
+  .checkout-progress li::after {
+    display: none;
   }
 
   .checkout-progress li:nth-child(3)::before {

@@ -24,15 +24,28 @@
 }
 
 .checkout-success__mark {
+  position: relative;
   display: grid;
   width: 4.6rem;
   height: 4.6rem;
   margin-bottom: 1.1rem;
   border-radius: 1.35rem;
-  background: var(--color-accent-soft);
-  color: var(--color-accent-strong);
+  background: linear-gradient(135deg, var(--color-accent-strong), var(--color-accent));
+  color: #fff;
   font-size: 2.2rem;
   place-items: center;
+  box-shadow: 0 1rem 2.2rem rgba(13, 71, 161, 0.22);
+  animation: success-pop 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.checkout-success__mark::before {
+  position: absolute;
+  inset: -0.55rem;
+  border-radius: 1.65rem;
+  background: rgba(144, 202, 249, 0.2);
+  content: '';
+  animation: success-pulse 1.4s ease-out 220ms both;
+  z-index: -1;
 }
 
 .checkout-success__card > span {
@@ -95,6 +108,30 @@ dd {
   flex-wrap: wrap;
   gap: 0.7rem;
   justify-content: center;
+}
+
+@keyframes success-pop {
+  from {
+    opacity: 0;
+    transform: translateY(0.4rem) scale(0.88);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes success-pulse {
+  from {
+    opacity: 0.8;
+    transform: scale(0.75);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(1.35);
+  }
 }
 
 @media (max-width: 620px) {

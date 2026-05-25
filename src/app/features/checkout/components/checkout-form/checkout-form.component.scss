@@ -106,7 +106,7 @@
   border-radius: 50%;
   background: var(--color-accent-soft);
   color: var(--color-accent-strong);
-  font-size: 0.72rem;
+  font-size: 0.88rem;
   font-weight: 950;
   place-items: center;
 }
@@ -138,9 +138,13 @@
   grid-template-columns: minmax(0, 1fr) 10rem minmax(10rem, 0.7fr);
 }
 
+.field-grid--address {
+  grid-template-columns: minmax(14rem, 1.15fr) minmax(10rem, 0.85fr);
+}
+
 label {
   display: grid;
-  grid-template-rows: auto 3.02rem 1.05rem;
+  grid-template-rows: auto 2.78rem 1.05rem;
   gap: 0.42rem;
   min-width: 0;
   color: var(--color-text);
@@ -150,7 +154,7 @@ label {
 
 .phone-field {
   display: grid;
-  grid-template-rows: auto 3.02rem 1.05rem;
+  grid-template-rows: auto 2.78rem 1.05rem;
   gap: 0.42rem;
   align-self: start;
   min-width: 0;
@@ -163,15 +167,15 @@ label {
   position: relative;
   overflow: visible;
   display: grid;
-  grid-template-columns: minmax(12.5rem, 0.88fr) minmax(0, 1fr);
+  grid-template-columns: minmax(13.6rem, 0.96fr) minmax(0, 1fr);
   gap: 0;
-  height: 3.02rem;
-  min-height: 3.02rem;
+  height: 2.78rem;
+  min-height: 2.78rem;
   padding: 1px;
-  border: 1px solid rgba(13, 71, 161, 0.11);
+  border: 1px solid rgba(74, 103, 142, 0.1);
   border-radius: 1rem;
-  background: rgba(255, 255, 255, 0.72);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.88) inset;
+  background: rgba(255, 255, 255, 0.64);
+  box-shadow: var(--checkout-control-shadow);
   transition:
     border-color 180ms ease,
     box-shadow 180ms ease,
@@ -179,11 +183,9 @@ label {
 }
 
 .phone-control:focus-within {
-  border-color: rgba(25, 118, 210, 0.42);
-  background: #fff;
-  box-shadow:
-    0 0 0 4px var(--color-focus-ring),
-    0 1px 0 rgba(255, 255, 255, 0.88) inset;
+  border-color: rgba(66, 125, 190, 0.2);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: var(--checkout-focus-shadow);
 }
 
 .phone-number input {
@@ -212,7 +214,7 @@ label {
   align-items: center;
   height: 100%;
   min-height: 0;
-  border-left: 1px solid rgba(13, 71, 161, 0.08);
+  border-left: 1px solid rgba(74, 103, 142, 0.12);
   border-radius: 0 0.86rem 0.86rem 0;
   background: rgba(247, 251, 255, 0.64);
   overflow: hidden;
@@ -220,15 +222,13 @@ label {
 
 .phone-number input {
   padding-left: 0.8rem;
-  line-height: 3.02rem;
+  line-height: 2.78rem;
 }
 
 .phone-field:has(.ng-invalid.ng-touched) .phone-control {
-  border-color: rgba(180, 35, 24, 0.42);
-  background: rgba(255, 250, 250, 0.94);
-  box-shadow:
-    0 0 0 4px rgba(180, 35, 24, 0.08),
-    0 1px 0 rgba(255, 255, 255, 0.88) inset;
+  border-color: rgba(165, 73, 65, 0.22);
+  background: rgba(255, 252, 251, 0.94);
+  box-shadow: var(--checkout-error-shadow);
 }
 
 .sr-only {
@@ -243,15 +243,15 @@ label {
 input,
 select {
   width: 100%;
-  min-height: 3.02rem;
-  border: 1px solid rgba(13, 71, 161, 0.11);
+  min-height: 2.78rem;
+  border: 1px solid rgba(74, 103, 142, 0.1);
   border-radius: 0.86rem;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.7);
   color: var(--color-text);
   font: inherit;
   font-size: 0.92rem;
-  padding: 0 0.92rem;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.88) inset;
+  padding: 0 0.82rem;
+  box-shadow: var(--checkout-control-shadow);
   transition:
     border-color 180ms ease,
     box-shadow 180ms ease,
@@ -261,17 +261,17 @@ select {
 
 input:focus,
 select:focus {
-  border-color: rgba(25, 118, 210, 0.42);
-  background: #fff;
-  box-shadow: 0 0 0 4px var(--color-focus-ring);
+  border-color: rgba(66, 125, 190, 0.2);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: var(--checkout-focus-shadow);
   outline: 0;
 }
 
 input.ng-invalid.ng-touched,
 select.ng-invalid.ng-touched {
-  border-color: rgba(180, 35, 24, 0.42);
-  background: rgba(255, 250, 250, 0.94);
-  box-shadow: 0 0 0 4px rgba(180, 35, 24, 0.08);
+  border-color: rgba(165, 73, 65, 0.22);
+  background: rgba(255, 252, 251, 0.94);
+  box-shadow: var(--checkout-error-shadow);
 }
 
 .phone-control input.ng-invalid.ng-touched,
@@ -284,9 +284,9 @@ select.ng-invalid.ng-touched {
 label small,
 .review-error {
   min-height: 1.05rem;
-  color: var(--color-danger);
+  color: #9f4a43;
   font-size: 0.76rem;
-  font-weight: 750;
+  font-weight: 650;
   line-height: 1.28;
 }
 
@@ -407,11 +407,12 @@ label small.is-empty,
 }
 
 .review-check input {
+  position: absolute;
   width: 1.05rem;
   height: 1.05rem;
   min-height: auto;
-  margin-top: 0.16rem;
-  accent-color: var(--color-accent-strong);
+  margin: 0;
+  opacity: 0;
 }
 
 .checkout-submit {
@@ -456,12 +457,31 @@ label small.is-empty,
   }
 
   .field-grid--two,
-  .field-grid--three {
+  .field-grid--three,
+  .field-grid--address {
     grid-template-columns: 1fr;
   }
 
   .phone-control {
     grid-template-columns: 1fr;
+    height: auto;
+    min-height: 0;
+  }
+
+  .phone-field {
+    grid-template-rows: auto auto 1.05rem;
+  }
+
+  .phone-country__trigger {
+    min-height: 2.78rem;
+    border-radius: 0.86rem 0.86rem 0 0;
+  }
+
+  .phone-number {
+    min-height: 2.78rem;
+    border-top: 1px solid rgba(13, 71, 161, 0.16);
+    border-left: 0;
+    border-radius: 0 0 0.86rem 0.86rem;
   }
 
   .delivery-options label {

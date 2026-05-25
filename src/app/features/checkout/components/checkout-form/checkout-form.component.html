@@ -56,7 +56,7 @@
           <div class="phone-field">
             <span>Phone number</span>
             <div class="phone-control">
-              <div class="phone-country">
+              <div class="phone-country phone-dial-country">
                 <button
                   class="phone-country__trigger"
                   type="button"
@@ -66,9 +66,6 @@
                   (click)="toggleCountryMenu($event)"
                   (keydown)="handleCountryTriggerKeydown($event)"
                 >
-                  <span class="phone-country__flag" aria-hidden="true">
-                    {{ countryFlag(selectedPhoneCountry()) }}
-                  </span>
                   <span class="phone-country__name">{{ selectedPhoneCountry().name }}</span>
                   <span class="phone-country__code">{{ selectedPhoneCountry().dialCode }}</span>
                   <span class="phone-country__chevron" aria-hidden="true"></span>
@@ -90,9 +87,6 @@
                         (click)="selectPhoneCountry(country)"
                         (keydown)="handleCountryOptionKeydown($event)"
                       >
-                        <span class="phone-country__flag" aria-hidden="true">
-                          {{ countryFlag(country) }}
-                        </span>
                         <span>{{ country.name }}</span>
                         <strong>{{ country.dialCode }}</strong>
                       </button>
@@ -123,119 +117,159 @@
         </div>
       </section>
 
-      <section class="checkout-section">
-        <div class="checkout-section__heading">
-          <span>03</span>
-          <div>
-            <h2>Shipping address</h2>
-            <p>Enter the destination for your Vertex setup.</p>
+      <div class="checkout-section-pair">
+        <section class="checkout-section checkout-section--delivery">
+          <div class="checkout-section__heading">
+            <span>03</span>
+            <div>
+              <h2>Shipping address</h2>
+              <p>Enter the destination for your Vertex setup.</p>
+            </div>
           </div>
-        </div>
 
-        <div class="field-grid field-grid--two">
-          <label>
-            <span>First name</span>
-            <input type="text" formControlName="firstName" autocomplete="given-name" />
-            <small [class.is-empty]="!isInvalid('firstName')">
-              @if (isInvalid('firstName')) {
-                {{ errorFor('firstName', 'First name') }}
-              }
-            </small>
-          </label>
+          <div class="field-grid field-grid--two">
+            <label>
+              <span>First name</span>
+              <input type="text" formControlName="firstName" autocomplete="given-name" />
+              <small [class.is-empty]="!isInvalid('firstName')">
+                @if (isInvalid('firstName')) {
+                  {{ errorFor('firstName', 'First name') }}
+                }
+              </small>
+            </label>
 
-          <label>
-            <span>Last name</span>
-            <input type="text" formControlName="lastName" autocomplete="family-name" />
-            <small [class.is-empty]="!isInvalid('lastName')">
-              @if (isInvalid('lastName')) {
-                {{ errorFor('lastName', 'Last name') }}
-              }
-            </small>
-          </label>
-        </div>
-
-        <label>
-          <span>Address</span>
-          <input type="text" formControlName="address" autocomplete="street-address" />
-          <small [class.is-empty]="!isInvalid('address')">
-            @if (isInvalid('address')) {
-              {{ errorFor('address', 'Address') }}
-            }
-          </small>
-        </label>
-
-        <div class="field-grid field-grid--three">
-          <label>
-            <span>City</span>
-            <input type="text" formControlName="city" autocomplete="address-level2" />
-            <small [class.is-empty]="!isInvalid('city')">
-              @if (isInvalid('city')) {
-                {{ errorFor('city', 'City') }}
-              }
-            </small>
-          </label>
-
-          <label>
-            <span>Postal code</span>
-            <input type="text" formControlName="postalCode" autocomplete="postal-code" />
-            <small [class.is-empty]="!isInvalid('postalCode')">
-              @if (isInvalid('postalCode')) {
-                {{ errorFor('postalCode', 'Postal code') }}
-              }
-            </small>
-          </label>
-
-          <label>
-            <span>Country</span>
-            <select formControlName="country" autocomplete="country-name">
-              <option>United States</option>
-              <option>Greece</option>
-              <option>Germany</option>
-              <option>France</option>
-              <option>United Kingdom</option>
-            </select>
-            <small [class.is-empty]="!isInvalid('country')">
-              @if (isInvalid('country')) {
-                {{ errorFor('country', 'Country') }}
-              }
-            </small>
-          </label>
-        </div>
-      </section>
-
-      <section class="checkout-section">
-        <div class="checkout-section__heading">
-          <span>04</span>
-          <div>
-            <h2>Delivery method</h2>
-            <p>Choose how fast you want your setup to arrive.</p>
+            <label>
+              <span>Last name</span>
+              <input type="text" formControlName="lastName" autocomplete="family-name" />
+              <small [class.is-empty]="!isInvalid('lastName')">
+                @if (isInvalid('lastName')) {
+                  {{ errorFor('lastName', 'Last name') }}
+                }
+              </small>
+            </label>
           </div>
-        </div>
 
-        <div class="delivery-options">
-          <label [class.is-selected]="selectedDelivery() === 'standard'">
-            <input type="radio" formControlName="deliveryMethod" value="standard" />
-            <span class="delivery-radio" aria-hidden="true"></span>
-            <app-icon name="truck" />
-            <span>
-              <strong>Standard delivery</strong>
-              <small>Tracked 2-4 business days</small>
-            </span>
-            <em>Free</em>
-          </label>
+          <div class="field-grid field-grid--address">
+            <label>
+              <span>Address</span>
+              <input type="text" formControlName="address" autocomplete="street-address" />
+              <small [class.is-empty]="!isInvalid('address')">
+                @if (isInvalid('address')) {
+                  {{ errorFor('address', 'Address') }}
+                }
+              </small>
+            </label>
 
-          <label [class.is-selected]="selectedDelivery() === 'express'">
-            <input type="radio" formControlName="deliveryMethod" value="express" />
-            <span class="delivery-radio" aria-hidden="true"></span>
-            <app-icon name="package" />
-            <span>
-              <strong>Express delivery</strong>
-              <small>Priority 1-2 business days</small>
-            </span>
-            <em>{{ 18 | currency: 'USD' : 'symbol' : '1.0-0' }}</em>
-          </label>
-        </div>
-      </section>
+            <label>
+              <span>City</span>
+              <input type="text" formControlName="city" autocomplete="address-level2" />
+              <small [class.is-empty]="!isInvalid('city')">
+                @if (isInvalid('city')) {
+                  {{ errorFor('city', 'City') }}
+                }
+              </small>
+            </label>
+
+            <label>
+              <span>Postal code</span>
+              <input type="text" formControlName="postalCode" autocomplete="postal-code" />
+              <small [class.is-empty]="!isInvalid('postalCode')">
+                @if (isInvalid('postalCode')) {
+                  {{ errorFor('postalCode', 'Postal code') }}
+                }
+              </small>
+            </label>
+
+            <label>
+              <span>Country</span>
+              <div class="phone-country address-country" [class.is-invalid]="isInvalid('country')">
+                <button
+                  class="phone-country__trigger"
+                  type="button"
+                  aria-haspopup="listbox"
+                  [attr.aria-expanded]="isAddressCountryMenuOpen()"
+                  aria-label="Shipping country"
+                  (click)="toggleAddressCountryMenu($event)"
+                  (keydown)="handleAddressCountryTriggerKeydown($event)"
+                >
+                  <span class="phone-country__name">{{ selectedAddressCountry().name }}</span>
+                  <span class="phone-country__chevron" aria-hidden="true"></span>
+                </button>
+
+                @if (isAddressCountryMenuOpen()) {
+                  <div class="phone-country__menu" role="listbox" aria-label="Shipping country options">
+                    @for (country of addressCountries; track country.iso; let index = $index) {
+                      <button
+                        type="button"
+                        role="option"
+                        [attr.aria-selected]="selectedAddressCountry().iso === country.iso"
+                        [class.is-active]="activeAddressCountryIndex() === index"
+                        [class.is-selected]="selectedAddressCountry().iso === country.iso"
+                        (click)="selectAddressCountry(country)"
+                        (keydown)="handleAddressCountryOptionKeydown($event)"
+                      >
+                        <span>{{ country.name }}</span>
+                      </button>
+                    }
+                  </div>
+                }
+              </div>
+              <small [class.is-empty]="!isInvalid('country')">
+                @if (isInvalid('country')) {
+                  {{ errorFor('country', 'Country') }}
+                }
+              </small>
+            </label>
+          </div>
+        </section>
+
+        <section class="checkout-section checkout-section--address">
+          <div class="checkout-section__heading">
+            <span>04</span>
+            <div>
+              <h2>Delivery method</h2>
+              <p>Choose how fast you want your setup to arrive.</p>
+            </div>
+          </div>
+
+          <div class="delivery-options">
+            <label [class.is-selected]="selectedDelivery() === 'standard'">
+              <input type="radio" formControlName="deliveryMethod" value="standard" />
+              <span class="delivery-radio" aria-hidden="true"></span>
+              <app-icon name="truck" />
+              <span>
+                <strong>Standard delivery</strong>
+                <small>Tracked 2-4 business days</small>
+              </span>
+              <em>Free</em>
+            </label>
+
+            <label [class.is-selected]="selectedDelivery() === 'express'">
+              <input type="radio" formControlName="deliveryMethod" value="express" />
+              <span class="delivery-radio" aria-hidden="true"></span>
+              <app-icon name="package" />
+              <span>
+                <strong>Express delivery</strong>
+                <small>Priority 1-2 business days</small>
+              </span>
+              <em>{{ 18 | currency: 'USD' : 'symbol' : '1.0-0' }}</em>
+            </label>
+          </div>
+
+          <div class="delivery-trust-list">
+            <p><app-icon name="shield" /> Secure demo checkout</p>
+            <p><app-icon name="refresh" /> 30-day returns</p>
+            <p><app-icon name="truck" /> Tracked delivery</p>
+          </div>
+
+          <div class="checkout-navigation checkout-navigation--inline">
+            <button class="button button--ghost" type="button" (click)="previousStep()">Back</button>
+            <button class="button" type="button" [disabled]="!canContinue()" (click)="nextStep()">
+              Continue
+            </button>
+          </div>
+        </section>
+      </div>
     }
 
     @case ('payment') {
@@ -253,33 +287,35 @@
           Demo checkout. No real payment will be processed.
         </p>
 
-        <label>
-          <span>Cardholder name</span>
-          <input type="text" formControlName="cardholderName" autocomplete="cc-name" />
-          <small [class.is-empty]="!isInvalid('cardholderName')">
-            @if (isInvalid('cardholderName')) {
-              {{ errorFor('cardholderName', 'Cardholder name') }}
-            }
-          </small>
-        </label>
+        <div class="field-grid field-grid--two">
+          <label>
+            <span>Cardholder name</span>
+            <input type="text" formControlName="cardholderName" autocomplete="cc-name" />
+            <small [class.is-empty]="!isInvalid('cardholderName')">
+              @if (isInvalid('cardholderName')) {
+                {{ errorFor('cardholderName', 'Cardholder name') }}
+              }
+            </small>
+          </label>
 
-        <label>
-          <span>Card number</span>
-          <input
-            type="text"
-            formControlName="cardNumber"
-            inputmode="numeric"
-            autocomplete="cc-number"
-            placeholder="4242 4242 4242 4242"
-            maxlength="23"
-            (input)="formatCardNumber($event)"
-          />
-          <small [class.is-empty]="!isInvalid('cardNumber')">
-            @if (isInvalid('cardNumber')) {
-              {{ errorFor('cardNumber', 'Card number') }}
-            }
-          </small>
-        </label>
+          <label>
+            <span>Card number</span>
+            <input
+              type="text"
+              formControlName="cardNumber"
+              inputmode="numeric"
+              autocomplete="cc-number"
+              placeholder="4242 4242 4242 4242"
+              maxlength="23"
+              (input)="formatCardNumber($event)"
+            />
+            <small [class.is-empty]="!isInvalid('cardNumber')">
+              @if (isInvalid('cardNumber')) {
+                {{ errorFor('cardNumber', 'Card number') }}
+              }
+            </small>
+          </label>
+        </div>
 
         <div class="field-grid field-grid--two">
           <label>
@@ -325,12 +361,59 @@
           <span>06</span>
           <div>
             <h2>Review order</h2>
-            <p>Confirm the details before placing the mock order.</p>
+            <p>Confirm your details before placing the mock order.</p>
           </div>
+        </div>
+
+        <div class="review-grid">
+          <article class="review-card">
+            <div class="review-card__header">
+              <app-icon name="headset" />
+              <h3>Contact information</h3>
+              <button type="button" (click)="editStep('shipping')">Edit</button>
+            </div>
+            <p>{{ fieldValue('email') }}</p>
+            <span>{{ fieldValue('phone') }}</span>
+          </article>
+
+          <article class="review-card">
+            <div class="review-card__header">
+              <app-icon name="map-pin" />
+              <h3>Shipping address</h3>
+              <button type="button" (click)="editStep('shipping')">Edit</button>
+            </div>
+            <p>{{ fieldValue('firstName') }} {{ fieldValue('lastName') }}</p>
+            <span>
+              {{ fieldValue('address') }}, {{ fieldValue('city') }}
+              {{ fieldValue('postalCode') }}, {{ fieldValue('country') }}
+            </span>
+          </article>
+
+          <article class="review-card">
+            <div class="review-card__header">
+              <app-icon name="truck" />
+              <h3>Delivery method</h3>
+              <button type="button" (click)="editStep('shipping')">Edit</button>
+            </div>
+            <p>{{ deliveryLabel() }}</p>
+            <span>{{ deliveryDescription() }} · Arrives {{ estimatedDelivery() }}</span>
+          </article>
+
+          <article class="review-card">
+            <div class="review-card__header">
+              <app-icon name="card" />
+              <h3>Payment method</h3>
+              <button type="button" (click)="editStep('payment')">Edit</button>
+            </div>
+            <p>{{ maskedCardNumber() }}</p>
+            <span>No payment details are stored.</span>
+          </article>
+
         </div>
 
         <label class="review-check">
           <input type="checkbox" formControlName="reviewOrder" />
+          <span class="review-check__box" aria-hidden="true"></span>
           <span>I confirm this is a demo checkout and no payment will be processed.</span>
         </label>
         <small class="review-error" [class.is-empty]="!isInvalid('reviewOrder')">
@@ -339,22 +422,36 @@
           }
         </small>
 
-        <button class="button checkout-submit" type="submit" [disabled]="form().invalid">
-          Place mock order
+        <button
+          class="button checkout-submit"
+          type="submit"
+          [class.is-loading]="isPlacingOrder()"
+          [disabled]="form().invalid || isPlacingOrder()"
+        >
+          @if (isPlacingOrder()) {
+            <span class="checkout-submit__spinner" aria-hidden="true"></span>
+            Reserving order...
+          } @else {
+            Place mock order
+          }
         </button>
         <p class="checkout-trust">
-          Secure demo checkout &middot; No payment stored &middot; 30-day returns
+          Protected checkout · Confirmation email sent after order creation
         </p>
       </section>
     }
   }
 
-  <div class="checkout-navigation">
+  @if (currentStep() !== 'shipping') {
+    <div class="checkout-navigation">
     @if (currentStep() !== 'cart') {
       <button class="button button--ghost" type="button" (click)="previousStep()">Back</button>
     }
     @if (currentStep() !== 'review') {
-      <button class="button" type="button" (click)="nextStep()">Continue</button>
+      <button class="button" type="button" [disabled]="!canContinue()" (click)="nextStep()">
+        Continue
+      </button>
     }
-  </div>
+    </div>
+  }
 </form>
