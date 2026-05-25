@@ -9,14 +9,23 @@
 
 .empty-state__mark {
   display: grid;
-  width: 4rem;
-  height: 4rem;
-  margin-bottom: 1rem;
-  border-radius: 50%;
-  background: var(--color-surface-strong);
-  color: var(--color-accent);
-  font-size: 2rem;
+  width: 5.25rem;
+  height: 5.25rem;
+  margin-bottom: 1.2rem;
+  border: 1px solid rgba(25, 118, 210, 0.12);
+  border-radius: 1.5rem;
+  background:
+    radial-gradient(circle at 50% 24%, rgba(144, 202, 249, 0.28), transparent 58%),
+    var(--color-surface-strong);
+  color: var(--color-accent-strong);
+  box-shadow: 0 0.85rem 2rem rgba(13, 71, 161, 0.07);
+  font-size: 2.25rem;
   place-items: center;
+}
+
+.empty-state__mark app-icon {
+  width: 2.4rem;
+  height: 2.4rem;
 }
 
 h2 {

@@ -1435,12 +1435,14 @@ export class ProductService {
       .map((id) => this.productsState().find((item) => item.id === id))
       .filter((item): item is Product => Boolean(item));
 
-    if (relatedById.length > 0) {
-      return relatedById.slice(0, 3);
-    }
+    const relatedIds = new Set(relatedById.map((item) => item.id));
+    const fallbackProducts = this.productsState().filter(
+      (item) =>
+        item.categoryId === product.categoryId &&
+        item.id !== product.id &&
+        !relatedIds.has(item.id),
+    );
 
-    return this.productsState()
-      .filter((item) => item.categoryId === product.categoryId && item.id !== product.id)
-      .slice(0, 3);
+    return [...relatedById, ...fallbackProducts].slice(0, 4);
   }
 }

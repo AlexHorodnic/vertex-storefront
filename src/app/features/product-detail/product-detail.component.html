@@ -1,4 +1,16 @@
 @if (product(); as item) {
+  <nav class="product-breadcrumbs" aria-label="Breadcrumb">
+    <a routerLink="/">Home</a>
+    <span aria-hidden="true">/</span>
+    <a routerLink="/products">Products</a>
+    <span aria-hidden="true">/</span>
+    <a [routerLink]="['/products']" [queryParams]="{ category: item.categoryId }">
+      {{ item.categoryName }}
+    </a>
+    <span aria-hidden="true">/</span>
+    <span aria-current="page">{{ item.name }}</span>
+  </nav>
+
   <section class="detail">
     <div class="gallery">
       <div class="gallery__image">
@@ -112,45 +124,97 @@
 
   <section class="specs">
     <div class="specs__intro">
-      <h2>Product details</h2>
+      <span>Technical profile</span>
+      <h2>Built for clean, modern setups.</h2>
       <p>{{ item.longDescription }}</p>
     </div>
 
     <div class="detail-sections">
-      <details open>
-        <summary>Specifications</summary>
+      <section class="spec-card-grid" aria-labelledby="specifications-title">
+        <h3 id="specifications-title">Specifications</h3>
         <dl>
           @for (spec of item.specs; track spec.label) {
             <div>
+              <app-icon [name]="specIcon(spec.label)" />
               <dt>{{ spec.label }}</dt>
               <dd>{{ spec.value }}</dd>
             </div>
           }
         </dl>
-      </details>
+      </section>
+
       <details>
         <summary>What's in the box</summary>
-        <p>{{ item.name }}, charging or connection cable, quick-start guide, and warranty card.</p>
+        <div class="detail-section__content">
+          <p>
+            {{ item.name }}, charging or connection cable, quick-start guide, and warranty card.
+          </p>
+        </div>
       </details>
       <details>
         <summary>Shipping & returns</summary>
-        <p>
-          Ships in 1-2 business days with tracked delivery. Returns are accepted within 30 days.
-        </p>
+        <div class="detail-section__content">
+          <p>
+            Ships in 1-2 business days with tracked delivery. Returns are accepted within 30 days.
+          </p>
+        </div>
       </details>
       <details>
         <summary>Warranty</summary>
-        <p>
-          Includes two-year Vertex protection with support for setup, diagnostics, and replacements.
-        </p>
+        <div class="detail-section__content">
+          <p>
+            Includes two-year Vertex protection with support for setup, diagnostics, and
+            replacements.
+          </p>
+        </div>
       </details>
       <details>
         <summary>Compatibility</summary>
-        <p>
-          Designed for modern desktop, mobile, and workspace ecosystems across macOS, Windows, iOS,
-          and Android where supported.
-        </p>
+        <div class="detail-section__content">
+          <p>
+            Designed for modern desktop, mobile, and workspace ecosystems across macOS, Windows,
+            iOS, and Android where supported.
+          </p>
+        </div>
       </details>
+    </div>
+  </section>
+
+  <section class="delivery-trust" aria-label="Delivery and trust">
+    @for (trustItem of deliveryTrustItems; track trustItem.title) {
+      <article>
+        <app-icon [name]="trustItem.icon" />
+        <div>
+          <h3>{{ trustItem.title }}</h3>
+          <p>{{ trustItem.description }}</p>
+        </div>
+      </article>
+    }
+  </section>
+
+  <section class="reviews" aria-labelledby="reviews-title">
+    <div class="reviews__summary">
+      <span>Customer signal</span>
+      <h2 id="reviews-title">{{ item.rating }} average rating</h2>
+      <p>{{ item.reviewCount }} verified reviews across Vertex orders and setup consultations.</p>
+    </div>
+    <div class="review-grid">
+      @for (review of reviews; track review.name) {
+        <article>
+          <div class="review-card__header">
+            <span class="review-card__avatar">{{ review.initials }}</span>
+            <div>
+              <strong>{{ review.name }}</strong>
+              <small>{{ review.role }}</small>
+            </div>
+            <em aria-label="{{ review.rating }} out of 5 stars">
+              <span aria-hidden="true">★★★★★</span>
+              {{ review.rating }}
+            </em>
+          </div>
+          <p>{{ review.comment }}</p>
+        </article>
+      }
     </div>
   </section>
 
@@ -161,6 +225,24 @@
       <app-product-grid [products]="relatedProducts()" />
     </section>
   }
+
+  <aside
+    class="sticky-purchase"
+    [class.is-visible]="showStickyPurchase()"
+    aria-label="Quick add to cart"
+  >
+    <div class="sticky-purchase__product">
+      <img [src]="item.imageUrl" [alt]="item.name" />
+      <div>
+        <strong>{{ item.name }}</strong>
+        <span>{{ selectedVariantLabel() }}</span>
+      </div>
+    </div>
+    <app-price [amount]="item.price" [compareAt]="item.originalPrice" />
+    <button class="button" type="button" (click)="addToCart()" [disabled]="item.stock === 0">
+      Add to cart
+    </button>
+  </aside>
 
   @if (isLightboxOpen()) {
     <div
