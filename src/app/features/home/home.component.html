@@ -1,123 +1,158 @@
-<section class="hero">
-  <div class="hero__content">
-    <p class="eyebrow">Premium tech storefront</p>
-    <h1>Curated electronics for sharper modern work.</h1>
-    <p>
-      Vertex brings flagship laptops, precision displays, refined audio, and desk-ready power into
-      one calm, premium buying experience.
-    </p>
-    <div class="hero__actions">
-      <a class="button" routerLink="/products">Shop premium tech</a>
+<main class="home">
+  <section class="home-hero" aria-labelledby="home-hero-title">
+    <div class="home-hero__copy">
+      <p class="home-eyebrow">Vertex premium electronics</p>
+      <h1 id="home-hero-title">Sharper tech for calmer modern work.</h1>
+      <p class="home-hero__lede">
+        Curated laptops, displays, audio, and desk essentials brought together in a polished
+        storefront built for focused buying.
+      </p>
+
+      <div class="home-hero__actions">
+        <a class="home-button home-button--primary" routerLink="/products">Shop products</a>
+        <a
+          class="home-button home-button--secondary"
+          routerLink="/products"
+          [queryParams]="{ collection: 'new-arrivals' }"
+          >View new arrivals</a
+        >
+      </div>
+
+      <div class="home-hero__signals" aria-label="Store highlights">
+        <span>40 curated products</span>
+        <span>10 focused categories</span>
+        <span>Demo checkout ready</span>
+      </div>
+    </div>
+
+    @if (productService.featuredProducts()[0]; as heroProduct) {
       <a
-        class="button button--ghost"
-        routerLink="/products"
-        [queryParams]="{ collection: 'new-arrivals' }"
-        >View new arrivals</a
+        class="home-hero__visual"
+        [routerLink]="['/products', heroProduct.slug]"
+        [style.--hero-tilt-x]="heroTiltX()"
+        [style.--hero-tilt-y]="heroTiltY()"
+        [style.--hero-glow-x]="heroGlowX()"
+        [style.--hero-glow-y]="heroGlowY()"
+        [style.--hero-shadow-x]="heroShadowX()"
+        [style.--hero-shadow-y]="heroShadowY()"
+        (pointermove)="onHeroPointerMove($event)"
+        (pointerleave)="resetHeroPointer()"
+        (blur)="resetHeroPointer()"
       >
-    </div>
-    <div class="hero__stats" aria-label="Store highlights">
-      <div>
-        <strong>40</strong>
-        <span>curated products</span>
-      </div>
-      <div>
-        <strong>10</strong>
-        <span>tech categories</span>
-      </div>
-      <div>
-        <strong>4.7+</strong>
-        <span>average rating</span>
-      </div>
-    </div>
-  </div>
-  <div class="hero__media" aria-label="Premium electronics setup">
-    <img
-      [src]="productService.featuredProducts()[0]?.imageUrl || ''"
-      alt="Premium laptop and electronics setup"
-    />
-    <div class="hero-product" aria-label="Featured product">
-      <span>Featured setup</span>
-      <strong>Aureon Luma 14</strong>
-      <p>Creator laptop paired with PrismView Studio and VoltStack charging.</p>
-      <a routerLink="/products/aureon-luma-14">Explore setup</a>
-    </div>
-  </div>
-</section>
-
-<section class="story story--setup">
-  <div>
-    <p class="eyebrow">Featured setup</p>
-    <h2>Designed around the workstation, not just the device.</h2>
-  </div>
-  <div class="story-grid">
-    <article>
-      <span>01</span>
-      <h3>Creator core</h3>
-      <p>Performance laptops and studio displays anchor focused production work.</p>
-    </article>
-    <article>
-      <span>02</span>
-      <h3>Signal and sound</h3>
-      <p>Premium cameras, headphones, and speakers keep remote presence polished.</p>
-    </article>
-    <article>
-      <span>03</span>
-      <h3>Desk finish</h3>
-      <p>Charging, input, and accessories complete the setup without visual noise.</p>
-    </article>
-  </div>
-</section>
-
-<section class="page-section">
-  <app-section-header
-    eyebrow="Shop by category"
-    title="A focused assortment with premium range."
-    description="Ten electronics categories keep the catalog realistic, scalable, and easy to merchandise."
-  />
-
-  <div class="category-grid">
-    @for (category of productService.categories(); track category.id) {
-      <a
-        class="category-card"
-        [routerLink]="['/products']"
-        [queryParams]="{ category: category.id }"
-      >
-        <img [src]="category.imageUrl" [alt]="category.name" loading="lazy" />
-        <span>{{ category.productCount }} products</span>
-        <h3>{{ category.name }}</h3>
-        <p>{{ category.description }}</p>
+        <span class="home-hero__glow" aria-hidden="true"></span>
+        <img [src]="heroProduct.imageUrl" [alt]="heroProduct.name" />
+        <div class="home-hero__panel">
+          <span>Featured setup</span>
+          <strong>{{ heroProduct.name }}</strong>
+          <p>{{ heroProduct.description }}</p>
+        </div>
       </a>
     }
-  </div>
-</section>
+  </section>
 
-<section class="page-section page-section--muted">
-  <app-section-header
-    eyebrow="Featured"
-    title="Recruiter-ready product merchandising."
-    description="Typed product data, reusable commerce UI, accessible actions, and responsive catalog behavior."
-    linkLabel="Browse all"
-    linkUrl="/products"
-  />
-  <app-product-grid [products]="productService.featuredProducts()" />
-</section>
+  @if (productService.featuredProducts()[1]; as spotlight) {
+    <section class="setup-story" aria-labelledby="setup-story-title">
+      <div class="setup-story__media">
+        <img [src]="spotlight.imageUrl" [alt]="spotlight.name" loading="lazy" />
+      </div>
+      <div class="setup-story__content">
+        <p class="home-eyebrow">Featured workstation</p>
+        <h2 id="setup-story-title">{{ spotlight.name }} anchors the Vertex desk edit.</h2>
+        <p>
+          A refined creator laptop paired with color-accurate display, premium audio, and fast
+          charging essentials for a complete modern setup.
+        </p>
 
-<section class="brand-proof">
-  <div>
-    <p class="eyebrow">Why Vertex</p>
-    <h2>Premium picks with data built for a real storefront.</h2>
-  </div>
-  <div class="brand-proof__list">
-    <p>Fictional products avoid brand conflicts while still feeling commercially plausible.</p>
-    <p>Each item carries variants, specs, stock state, reviews, badges, and related products.</p>
-    <p>Reusable Angular components keep the catalog scalable as the assortment grows.</p>
-  </div>
-</section>
+        <div class="setup-story__meta">
+          <span>{{ spotlight.price | currency: 'USD' : 'symbol' : '1.0-0' }}</span>
+          <span>{{ spotlight.rating }} rating</span>
+          <span>{{ spotlight.reviewCount }} reviews</span>
+        </div>
 
-<section class="promo">
-  <div>
-    <p class="eyebrow">Launch edit</p>
-    <h2>Build a premium workstation from laptops to charging in one polished catalog.</h2>
-  </div>
-  <a class="button" routerLink="/products">Browse the edit</a>
-</section>
+        <a class="home-button home-button--primary" [routerLink]="['/products', spotlight.slug]">
+          View featured product
+        </a>
+      </div>
+    </section>
+  }
+
+  <section class="category-discovery" aria-label="Shop by category">
+    <div class="category-mosaic">
+      @for (category of productService.categories().slice(0, 6); track category.id; let index = $index) {
+        <a
+          class="category-tile"
+          [class.category-tile--large]="index === 0 || index === 3"
+          [routerLink]="['/products']"
+          [queryParams]="{ category: category.id }"
+        >
+          <img [src]="category.imageUrl" [alt]="category.name" loading="lazy" />
+          <span>{{ category.productCount }} products</span>
+          <h3>{{ category.name }}</h3>
+          <p>{{ category.description }}</p>
+        </a>
+      }
+    </div>
+  </section>
+
+  <section class="featured-products" aria-labelledby="featured-products-title">
+    <div class="home-section-heading home-section-heading--inline">
+      <div>
+        <p class="home-eyebrow">Featured products</p>
+        <h2 id="featured-products-title">Portfolio-ready commerce cards with real product depth.</h2>
+      </div>
+      <a routerLink="/products">Browse all</a>
+    </div>
+
+    <div class="product-rail">
+      @for (product of productService.products().slice(2, 6); track product.id) {
+        <app-product-card [product]="product" />
+      }
+    </div>
+  </section>
+
+  <section class="value-strip" aria-labelledby="value-title">
+    <div>
+      <p class="home-eyebrow">Why Vertex</p>
+      <h2 id="value-title">A storefront that behaves like a production ecommerce app.</h2>
+    </div>
+
+    <div class="value-strip__grid">
+      <article>
+        <span>01</span>
+        <h3>Fast delivery cues</h3>
+        <p>Clear stock, delivery, and checkout states make the buying flow feel complete.</p>
+      </article>
+      <article>
+        <span>02</span>
+        <h3>Curated catalog</h3>
+        <p>Typed mock products include variants, ratings, images, specs, and related items.</p>
+      </article>
+      <article>
+        <span>03</span>
+        <h3>Secure demo checkout</h3>
+        <p>Validation, persistence, totals, promos, and review states are built into the flow.</p>
+      </article>
+      <article>
+        <span>04</span>
+        <h3>Responsive Angular</h3>
+        <p>Standalone components, mobile filters, product detail pages, and cart interactions.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="closing-cta" aria-labelledby="closing-title">
+    <div>
+      <p class="home-eyebrow">Ready to browse</p>
+      <h2 id="closing-title">Build a cleaner workstation from one curated tech catalog.</h2>
+    </div>
+    <div class="closing-cta__actions">
+      <a class="home-button home-button--light" routerLink="/products">Shop products</a>
+      <a
+        class="home-button home-button--outline"
+        routerLink="/products"
+        [queryParams]="{ collection: 'best-seller' }"
+        >See best sellers</a
+      >
+    </div>
+  </section>
+</main>
