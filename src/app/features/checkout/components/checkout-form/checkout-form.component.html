@@ -1,4 +1,11 @@
-<form class="checkout-form" [formGroup]="form()" (ngSubmit)="submit()">
+<form
+  class="checkout-form"
+  [class.checkout-form--cart]="currentStep() === 'cart'"
+  [class.checkout-form--shipping]="currentStep() === 'shipping'"
+  [class.checkout-form--payment]="currentStep() === 'payment'"
+  [formGroup]="form()"
+  (ngSubmit)="submit()"
+>
   @switch (currentStep()) {
     @case ('cart') {
       <section class="checkout-section checkout-step-panel">
@@ -17,19 +24,6 @@
     }
 
     @case ('shipping') {
-      <section class="express-checkout" aria-label="Express checkout">
-        <div>
-          <span>Express checkout</span>
-          <p>Demo wallet buttons only. No real payment will be processed.</p>
-        </div>
-        <div class="express-checkout__actions">
-          <app-stripe-express-checkout
-            [total]="total()"
-            (walletSuccess)="walletPaymentSuccess.emit()"
-          />
-        </div>
-      </section>
-
       <section class="checkout-section">
         <div class="checkout-section__heading">
           <span>02</span>
@@ -308,7 +302,7 @@
               inputmode="numeric"
               autocomplete="cc-number"
               placeholder="4242 4242 4242 4242"
-              maxlength="23"
+              maxlength="19"
               (input)="formatCardNumber($event)"
             />
             <small [class.is-empty]="!isInvalid('cardNumber')">
@@ -456,4 +450,36 @@
     }
     </div>
   }
+
+  <div class="mobile-checkout-bar" aria-label="Checkout action bar">
+    <div>
+      <span>Total</span>
+      <strong>{{ total() | currency: 'USD' : 'symbol' : '1.0-0' }}</strong>
+    </div>
+
+    <div class="mobile-checkout-bar__actions">
+      @if (currentStep() !== 'cart') {
+        <button class="button button--ghost" type="button" (click)="previousStep()">Back</button>
+      }
+
+      @if (currentStep() === 'review') {
+        <button
+          class="button"
+          type="submit"
+          [class.is-loading]="isPlacingOrder()"
+          [disabled]="form().invalid || isPlacingOrder()"
+        >
+          @if (isPlacingOrder()) {
+            Reserving...
+          } @else {
+            Place order
+          }
+        </button>
+      } @else {
+        <button class="button" type="button" [disabled]="!canContinue()" (click)="nextStep()">
+          Continue
+        </button>
+      }
+    </div>
+  </div>
 </form>

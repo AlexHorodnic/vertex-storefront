@@ -22,6 +22,7 @@ export class OrderSummaryComponent {
   protected readonly promoCode = new FormControl('', { nonNullable: true });
   protected readonly promoState = signal<'idle' | 'loading' | 'success' | 'invalid'>('idle');
   protected readonly promoMessage = signal('Use VERTEXDEMO for 10% off this demo order.');
+  protected readonly isExpanded = signal(false);
 
   protected readonly paymentMethods: readonly PaymentMethodLogo[] = [
     { id: 'visa', name: 'Visa', iconPath: 'assets/icons/payment/visa.svg' },
@@ -66,5 +67,9 @@ export class OrderSummaryComponent {
       this.promoMessage.set('Use VERTEXDEMO for 10% off this demo order.');
       this.promoApplied.emit(0);
     }
+  }
+
+  protected toggleExpanded(): void {
+    this.isExpanded.update((isExpanded) => !isExpanded);
   }
 }

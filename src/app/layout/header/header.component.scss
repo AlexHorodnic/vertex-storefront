@@ -120,18 +120,40 @@ nav a:hover {
 @media (max-width: 680px) {
   .site-header {
     grid-template-columns: 1fr auto;
+    gap: 0.5rem;
     min-height: auto;
+    padding-block: 0.48rem;
+  }
+
+  .site-header__brand {
+    gap: 0.48rem;
+    font-size: 0.94rem;
+  }
+
+  .site-header__brand span {
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 0.62rem;
   }
 
   nav {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    justify-content: stretch;
-    width: 100%;
+    display: none;
   }
 
-  nav a {
-    flex: 1;
-    text-align: center;
+  .site-header__cart {
+    gap: 0.38rem;
+    min-height: 2.28rem;
+    padding: 0 0.72rem;
+    font-size: 0;
+  }
+
+  .site-header__cart app-icon {
+    font-size: 1.08rem;
+  }
+
+  .site-header__cart span {
+    min-width: 1.28rem;
+    height: 1.28rem;
+    font-size: 0.72rem;
   }
 }

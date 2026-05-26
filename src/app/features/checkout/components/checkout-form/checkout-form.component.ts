@@ -13,11 +13,10 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { CheckoutStep, DeliveryMethod } from '../../checkout.models';
 import { IconComponent } from '../../../../shared/components/icon/icon.component';
-import { StripeExpressCheckoutComponent } from '../stripe-express-checkout/stripe-express-checkout.component';
 
 @Component({
   selector: 'app-checkout-form',
-  imports: [CurrencyPipe, ReactiveFormsModule, IconComponent, StripeExpressCheckoutComponent],
+  imports: [CurrencyPipe, ReactiveFormsModule, IconComponent],
   templateUrl: './checkout-form.component.html',
   styleUrl: './checkout-form.component.scss',
 })
@@ -34,7 +33,6 @@ export class CheckoutFormComponent implements OnInit {
   readonly isPlacingOrder = input(false);
   readonly stepChange = output<CheckoutStep>();
   readonly placeOrder = output<void>();
-  readonly walletPaymentSuccess = output<void>();
   protected readonly submitAttempted = signal(false);
 
   protected readonly shippingControls = [
@@ -366,7 +364,7 @@ export class CheckoutFormComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     const formattedValue = input.value
       .replace(/\D/g, '')
-      .slice(0, 19)
+      .slice(0, 16)
       .replace(/(.{4})/g, '$1 ')
       .trim();
 

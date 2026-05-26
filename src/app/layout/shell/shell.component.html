@@ -2,5 +2,7 @@
 <main>
   <router-outlet />
 </main>
-<app-footer />
+@if (!isCheckoutRoute()) {
+  <app-footer />
+}
 <app-cart-drawer />

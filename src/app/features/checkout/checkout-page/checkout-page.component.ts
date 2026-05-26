@@ -69,7 +69,7 @@ export class CheckoutPageComponent {
     country: ['United States', Validators.required],
     deliveryMethod: ['standard' as DeliveryMethod, Validators.required],
     cardholderName: ['', Validators.required],
-    cardNumber: ['', [Validators.required, Validators.pattern(/^[0-9 ]{15,23}$/)]],
+    cardNumber: ['', [Validators.required, Validators.pattern(/^\d{4} \d{4} \d{4} \d{4}$/)]],
     expiry: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])\/\d{2}$/)]],
     cvc: ['', [Validators.required, Validators.pattern(/^\d{3,4}$/)]],
     reviewOrder: [false, Validators.requiredTrue],
@@ -91,6 +91,11 @@ export class CheckoutPageComponent {
       total: taxableSubtotal + shipping + tax,
     };
   });
+
+  protected readonly currentStepNumber = computed(() => this.stepIndex(this.currentStep()) + 1);
+  protected readonly currentStepLabel = computed(
+    () => this.checkoutSteps[this.currentStepNumber() - 1]?.label ?? 'Checkout',
+  );
 
   constructor() {
     this.restoreShippingData();
@@ -141,31 +146,6 @@ export class CheckoutPageComponent {
       this.isPlacingOrder.set(false);
       globalThis.scrollTo({ top: 0, behavior: 'smooth' });
     }, 850);
-  }
-
-  protected completeWalletOrder(): void {
-    if (this.isPlacingOrder() || this.items().length === 0) {
-      return;
-    }
-
-    this.isPlacingOrder.set(true);
-    const orderItems = [...this.items()];
-    const orderTotals = this.totals();
-
-    globalThis.setTimeout(() => {
-      this.confirmation.set({
-        orderNumber: this.createOrderNumber(),
-        estimatedDelivery: this.estimatedDeliveryLabel(),
-        items: orderItems,
-        totals: orderTotals,
-      });
-
-      this.cartService.clearCart();
-      this.checkoutPersistence.clearShipping();
-      this.hasSavedShippingData.set(false);
-      this.isPlacingOrder.set(false);
-      globalThis.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 450);
   }
 
   protected setStep(step: CheckoutStep): void {

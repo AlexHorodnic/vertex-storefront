@@ -47,6 +47,16 @@
       }
     </ol>
 
+    <div class="checkout-progress-mobile" aria-label="Checkout progress">
+      <div>
+        <span>Step {{ currentStepNumber() }} of {{ checkoutSteps.length }}</span>
+        <strong>{{ currentStepLabel() }}</strong>
+      </div>
+      <div aria-hidden="true">
+        <span [style.width.%]="(currentStepNumber() / checkoutSteps.length) * 100"></span>
+      </div>
+    </div>
+
     <div class="checkout-layout">
       <app-checkout-form
         [form]="checkoutForm"
@@ -60,7 +70,6 @@
         [isPlacingOrder]="isPlacingOrder()"
         (stepChange)="setStep($event)"
         (placeOrder)="placeOrder()"
-        (walletPaymentSuccess)="completeWalletOrder()"
       />
 
       <app-order-summary

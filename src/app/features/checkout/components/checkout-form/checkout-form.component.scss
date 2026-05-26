@@ -7,42 +7,6 @@
   gap: 0.9rem;
 }
 
-.express-checkout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 1rem;
-  align-items: center;
-  padding: clamp(0.95rem, 1.8vw, 1.15rem);
-  border: 1px solid rgba(13, 71, 161, 0.09);
-  border-radius: var(--radius-xl);
-  background:
-    linear-gradient(135deg, rgba(225, 245, 254, 0.52), rgba(255, 255, 255, 0.78) 62%),
-    var(--color-surface);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.94) inset,
-    0 0.7rem 1.8rem rgba(13, 71, 161, 0.05);
-}
-
-.express-checkout span {
-  color: var(--color-accent);
-  font-size: 0.72rem;
-  font-weight: 950;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
-}
-
-.express-checkout p {
-  margin: 0.2rem 0 0;
-  color: var(--color-muted);
-  font-size: 0.86rem;
-}
-
-.express-checkout__actions {
-  display: flex;
-  justify-content: flex-end;
-  min-width: min(22rem, 100%);
-}
-
 .checkout-section {
   display: grid;
   gap: 1rem;
@@ -422,12 +386,55 @@ label small.is-empty,
 }
 
 @media (max-width: 760px) {
-  .express-checkout {
-    grid-template-columns: 1fr;
+  .checkout-form {
+    gap: 0.72rem;
   }
 
-  .express-checkout__actions {
-    justify-content: stretch;
+  .checkout-section {
+    gap: 0.72rem;
+    padding: 0.82rem;
+    border-radius: 1rem;
+  }
+
+  .checkout-section__heading {
+    gap: 0.62rem;
+  }
+
+  .checkout-section__heading > span {
+    width: 1.78rem;
+    height: 1.78rem;
+    font-size: 0.78rem;
+  }
+
+  .checkout-section h2 {
+    font-size: 1rem;
+  }
+
+  .checkout-section p {
+    margin-top: 0.12rem;
+    font-size: 0.82rem;
+    line-height: 1.38;
+  }
+
+  .demo-note {
+    padding: 0.55rem 0.65rem;
+    font-size: 0.8rem;
+  }
+
+  .field-grid {
+    gap: 0.55rem;
+  }
+
+  label,
+  .phone-field {
+    gap: 0.3rem;
+    font-size: 0.78rem;
+  }
+
+  input,
+  select,
+  .phone-control {
+    min-height: 2.58rem;
   }
 
   .field-grid--two,
@@ -447,12 +454,12 @@ label small.is-empty,
   }
 
   .phone-country__trigger {
-    min-height: 2.78rem;
+    min-height: 2.58rem;
     border-radius: 0.86rem 0.86rem 0 0;
   }
 
   .phone-number {
-    min-height: 2.78rem;
+    min-height: 2.58rem;
     border-top: 1px solid rgba(13, 71, 161, 0.16);
     border-left: 0;
     border-radius: 0 0 0.86rem 0.86rem;
@@ -462,17 +469,34 @@ label small.is-empty,
     grid-template-columns: auto auto minmax(0, 1fr);
   }
 
+  .delivery-options label:active {
+    background: rgba(225, 245, 254, 0.36);
+    transform: scale(0.992);
+  }
+
   .delivery-options em {
     grid-column: 3;
   }
 }
 
 @media (max-width: 520px) {
-  .checkout-navigation {
-    flex-direction: column-reverse;
+  .checkout-form {
+    gap: 0.68rem;
+    padding-bottom: 6.4rem;
   }
 
-  .checkout-navigation .button {
-    width: 100%;
+  .checkout-form--cart,
+  .checkout-form--shipping,
+  .checkout-form--payment {
+    padding-bottom: 0;
   }
+
+  .checkout-navigation {
+    display: none;
+  }
+
+  .checkout-submit {
+    display: none;
+  }
+
 }
