@@ -72,6 +72,7 @@ export class ProductsComponent {
   protected readonly isLoading = signal(true);
   protected readonly isLoadingMore = signal(false);
   protected readonly isSortMenuOpen = signal(false);
+  protected readonly isFilterDrawerOpen = signal(false);
   protected readonly activePriceHandle = signal<PriceHandle | null>(null);
   protected readonly selectedSortLabel = computed(
     () =>
@@ -93,6 +94,19 @@ export class ProductsComponent {
   protected readonly filteredProducts = computed(() =>
     filterProducts(this.productService.products(), this.filters()),
   );
+  protected readonly activeFilterCount = computed(() => {
+    const filters = this.filters();
+    const defaults = this.defaultFilters();
+
+    return [
+      filters.searchTerm.trim() !== defaults.searchTerm,
+      filters.categoryId !== defaults.categoryId,
+      filters.collectionId !== defaults.collectionId,
+      filters.sort !== defaults.sort,
+      filters.priceRange.min !== defaults.priceRange.min ||
+        filters.priceRange.max !== defaults.priceRange.max,
+    ].filter(Boolean).length;
+  });
   protected readonly visibleProducts = computed(() =>
     this.filteredProducts().slice(0, this.visibleProductCount()),
   );
@@ -304,6 +318,19 @@ export class ProductsComponent {
   resetFilters(): void {
     this.filters.set(this.defaultFilters());
     this.resetVisibleProducts();
+  }
+
+  openFilterDrawer(): void {
+    this.isFilterDrawerOpen.set(true);
+  }
+
+  closeFilterDrawer(): void {
+    this.isFilterDrawerOpen.set(false);
+    this.closeSortMenu();
+  }
+
+  applyFilterDrawer(): void {
+    this.closeFilterDrawer();
   }
 
   loadMoreProducts(): void {
