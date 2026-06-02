@@ -1,4 +1,12 @@
-import { AfterViewInit, Component, HostListener, computed, inject, signal } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  HostListener,
+  OnDestroy,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { CartService } from '../../core/services/cart.service';
@@ -29,7 +37,7 @@ import { IconComponent, IconName } from '../../shared/components/icon/icon.compo
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.scss',
 })
-export class ProductDetailComponent implements AfterViewInit {
+export class ProductDetailComponent implements AfterViewInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly productService = inject(ProductService);
   private readonly cartService = inject(CartService);
@@ -120,9 +128,17 @@ export class ProductDetailComponent implements AfterViewInit {
       description: 'Regional availability for faster delivery.',
     },
   ];
+  private lightboxSwipeStartX: number | null = null;
+  private lightboxSwipeStartY: number | null = null;
+  private readonly lightboxSwipeThreshold = 48;
+  private lightboxScrollY = 0;
 
   ngAfterViewInit(): void {
     window.requestAnimationFrame(() => this.updateStickyPurchaseVisibility());
+  }
+
+  ngOnDestroy(): void {
+    this.unlockLightboxScroll();
   }
 
   selectImage(imageUrl: string): void {
@@ -132,10 +148,13 @@ export class ProductDetailComponent implements AfterViewInit {
   openLightbox(imageUrl: string): void {
     this.selectImage(imageUrl);
     this.isLightboxOpen.set(true);
+    this.lockLightboxScroll();
   }
 
   closeLightbox(): void {
     this.isLightboxOpen.set(false);
+    this.unlockLightboxScroll();
+    this.resetLightboxSwipe();
   }
 
   showPreviousImage(): void {
@@ -144,6 +163,41 @@ export class ProductDetailComponent implements AfterViewInit {
 
   showNextImage(): void {
     this.showImageByOffset(1);
+  }
+
+  startLightboxSwipe(event: PointerEvent): void {
+    if (!this.isLightboxOpen() || event.pointerType === 'mouse') {
+      return;
+    }
+
+    event.preventDefault();
+    this.lightboxSwipeStartX = event.clientX;
+    this.lightboxSwipeStartY = event.clientY;
+
+    if (event.currentTarget instanceof HTMLElement) {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    }
+  }
+
+  finishLightboxSwipe(event: PointerEvent): void {
+    if (this.lightboxSwipeStartX === null || this.lightboxSwipeStartY === null) {
+      return;
+    }
+
+    const deltaX = event.clientX - this.lightboxSwipeStartX;
+    const deltaY = event.clientY - this.lightboxSwipeStartY;
+    this.resetLightboxSwipe();
+
+    if (Math.abs(deltaX) < this.lightboxSwipeThreshold || Math.abs(deltaY) > Math.abs(deltaX) * 0.75) {
+      return;
+    }
+
+    if (deltaX < 0) {
+      this.showNextImage();
+      return;
+    }
+
+    this.showPreviousImage();
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -278,6 +332,31 @@ export class ProductDetailComponent implements AfterViewInit {
       product.gallery.length;
 
     this.selectedImage.set(product.gallery[nextIndex]);
+  }
+
+  private lockLightboxScroll(): void {
+    if (document.body.classList.contains('lightbox-open')) {
+      return;
+    }
+
+    this.lightboxScrollY = window.scrollY;
+    document.body.style.top = `-${this.lightboxScrollY}px`;
+    document.body.classList.add('lightbox-open');
+  }
+
+  private unlockLightboxScroll(): void {
+    if (!document.body.classList.contains('lightbox-open')) {
+      return;
+    }
+
+    document.body.classList.remove('lightbox-open');
+    document.body.style.top = '';
+    window.scrollTo({ top: this.lightboxScrollY, behavior: 'instant' });
+  }
+
+  private resetLightboxSwipe(): void {
+    this.lightboxSwipeStartX = null;
+    this.lightboxSwipeStartY = null;
   }
 
   private storedVariantId(): string {

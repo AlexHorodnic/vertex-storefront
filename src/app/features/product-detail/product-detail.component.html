@@ -253,14 +253,6 @@
       (click)="closeLightbox()"
     >
       <button
-        class="lightbox__close"
-        type="button"
-        aria-label="Close expanded image"
-        (click)="closeLightbox(); $event.stopPropagation()"
-      >
-        <app-icon name="close" />
-      </button>
-      <button
         class="lightbox__nav lightbox__nav--prev"
         type="button"
         aria-label="Previous image"
@@ -268,7 +260,13 @@
       >
         <app-icon name="chevron-left" />
       </button>
-      <figure class="lightbox__frame" (click)="$event.stopPropagation()">
+      <figure
+        class="lightbox__frame"
+        (click)="$event.stopPropagation()"
+        (pointerdown)="startLightboxSwipe($event)"
+        (pointerup)="finishLightboxSwipe($event)"
+        (pointercancel)="finishLightboxSwipe($event)"
+      >
         <img [src]="selectedImage() || item.gallery[0]" [alt]="item.name + ' expanded view'" />
       </figure>
       <button
