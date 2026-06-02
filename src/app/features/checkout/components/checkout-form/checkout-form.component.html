@@ -3,6 +3,7 @@
   [class.checkout-form--cart]="currentStep() === 'cart'"
   [class.checkout-form--shipping]="currentStep() === 'shipping'"
   [class.checkout-form--payment]="currentStep() === 'payment'"
+  [class.checkout-form--review]="currentStep() === 'review'"
   [formGroup]="form()"
   (ngSubmit)="submit()"
 >

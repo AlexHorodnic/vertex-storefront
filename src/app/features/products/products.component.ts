@@ -177,6 +177,9 @@ export class ProductsComponent {
 
   startPriceDrag(handle: PriceHandle, event: PointerEvent, sliderElement: HTMLElement): void {
     event.preventDefault();
+    if (event.currentTarget instanceof HTMLElement) {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    }
     this.priceSliderElement = sliderElement;
     this.activePriceHandle.set(handle);
     this.updatePriceFromPointer(handle, event, sliderElement);

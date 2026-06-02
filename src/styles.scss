@@ -484,9 +484,11 @@ app-products {
 
 .price-slider__control {
   position: relative;
-  min-height: 1.35rem;
+  height: 1.45rem;
+  min-height: 1.45rem;
   cursor: pointer;
   touch-action: none;
+  user-select: none;
 }
 
 .price-slider__track,
@@ -514,8 +516,10 @@ app-products {
   position: absolute;
   top: 50%;
   z-index: 2;
+  display: block;
   width: 1.12rem;
   height: 1.12rem;
+  appearance: none;
   margin: 0;
   border: 2px solid #fff;
   border-radius: 50%;
@@ -524,8 +528,12 @@ app-products {
     0 0.28rem 0.7rem rgba(13, 71, 161, 0.22),
     0 0 0 1px rgba(13, 71, 161, 0.16);
   cursor: grab;
+  line-height: 0;
   padding: 0;
+  touch-action: none;
   transform: translate(-50%, -50%);
+  user-select: none;
+  will-change: left, transform;
   transition:
     box-shadow 180ms ease,
     transform 180ms ease;
@@ -727,6 +735,12 @@ app-products {
 }
 
 @media (max-width: 900px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+
   .story,
   .brand-proof {
     grid-template-columns: 1fr;
@@ -738,6 +752,15 @@ app-products {
 }
 
 @media (max-width: 560px) {
+  .price-slider {
+    padding-block: 0.45rem 0.34rem;
+  }
+
+  .price-slider__control {
+    height: 1.65rem;
+    min-height: 1.65rem;
+  }
+
   .price-filter {
     grid-template-columns: 1fr;
   }

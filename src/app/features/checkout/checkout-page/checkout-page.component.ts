@@ -144,14 +144,14 @@ export class CheckoutPageComponent {
       this.checkoutPersistence.clearShipping();
       this.hasSavedShippingData.set(false);
       this.isPlacingOrder.set(false);
-      globalThis.scrollTo({ top: 0, behavior: 'smooth' });
+      this.scrollCheckoutToTop();
     }, 850);
   }
 
   protected setStep(step: CheckoutStep): void {
     if (this.canVisitStep(step)) {
       this.currentStep.set(step);
-      globalThis.scrollTo({ top: 0, behavior: 'smooth' });
+      this.scrollCheckoutToTop();
     }
   }
 
@@ -271,4 +271,19 @@ export class CheckoutPageComponent {
     };
   }
 
+  private scrollCheckoutToTop(): void {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+
+    window.requestAnimationFrame(() => {
+      const checkoutPage = document.querySelector('.checkout-page');
+      const top =
+        checkoutPage instanceof HTMLElement
+          ? checkoutPage.getBoundingClientRect().top + window.scrollY
+          : 0;
+
+      window.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
+    });
+  }
 }
