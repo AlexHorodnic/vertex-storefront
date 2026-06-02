@@ -15,7 +15,9 @@
   align-items: center;
   margin-bottom: clamp(0.65rem, 1.4vw, 0.95rem);
   color: var(--color-muted);
-  font-size: 0.82rem;
+  font-size: var(--text-xs);
+  font-weight: 650;
+  line-height: 1.35;
 }
 
 .checkout-breadcrumbs a {
@@ -38,25 +40,27 @@
 .checkout-hero span {
   color: var(--color-accent);
   font-size: 0.76rem;
-  font-weight: 900;
-  letter-spacing: 0.12em;
+  font-weight: 780;
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
 }
 
 .checkout-hero h1 {
   margin: 0;
   color: var(--color-text);
-  font-size: clamp(2rem, 4vw, 3.35rem);
-  letter-spacing: -0.05em;
-  line-height: 1.02;
+  font-size: var(--text-3xl);
+  font-weight: 780;
+  letter-spacing: var(--tracking-heading);
+  line-height: var(--leading-heading);
 }
 
 .checkout-hero p {
   max-width: 39rem;
   margin: 0;
   color: var(--color-muted);
-  font-size: clamp(0.94rem, 1.25vw, 1.02rem);
-  line-height: 1.5;
+  font-size: 0.96rem;
+  font-weight: 420;
+  line-height: 1.6;
 }
 
 .checkout-progress {
@@ -86,8 +90,9 @@
   min-height: 2.15rem;
   place-items: center;
   color: var(--color-muted);
-  font-size: 0.78rem;
-  font-weight: 850;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  line-height: 1;
 }
 
 .checkout-progress li::after {
@@ -262,8 +267,8 @@
   .checkout-progress-mobile span {
     color: var(--color-accent);
     font-size: 0.7rem;
-    font-weight: 900;
-    letter-spacing: 0.08em;
+    font-weight: 780;
+    letter-spacing: var(--tracking-label);
     text-transform: uppercase;
   }
 

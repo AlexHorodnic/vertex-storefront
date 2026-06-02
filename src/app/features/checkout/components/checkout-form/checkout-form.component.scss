@@ -52,7 +52,8 @@
 
 .checkout-section h2 {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: var(--text-lg);
+  font-weight: 740;
   letter-spacing: -0.025em;
   line-height: 1.15;
 }
@@ -61,7 +62,8 @@
   margin: 0.24rem 0 0;
   color: var(--color-muted);
   font-size: 0.9rem;
-  line-height: 1.5;
+  font-weight: 420;
+  line-height: 1.55;
 }
 
 .field-grid {
@@ -87,8 +89,9 @@ label {
   gap: 0.42rem;
   min-width: 0;
   color: var(--color-text);
-  font-size: 0.82rem;
-  font-weight: 850;
+  font-size: var(--text-xs);
+  font-weight: 720;
+  letter-spacing: -0.005em;
 }
 
 .phone-field {
@@ -98,8 +101,9 @@ label {
   align-self: start;
   min-width: 0;
   color: var(--color-text);
-  font-size: 0.82rem;
-  font-weight: 850;
+  font-size: var(--text-xs);
+  font-weight: 720;
+  letter-spacing: -0.005em;
 }
 
 .phone-control {
@@ -188,7 +192,8 @@ select {
   background: rgba(255, 255, 255, 0.7);
   color: var(--color-text);
   font: inherit;
-  font-size: 0.92rem;
+  font-size: var(--text-sm);
+  font-weight: 500;
   padding: 0 0.82rem;
   box-shadow: var(--checkout-control-shadow);
   transition:
@@ -225,7 +230,7 @@ label small,
   min-height: 1.05rem;
   color: #9f4a43;
   font-size: 0.76rem;
-  font-weight: 650;
+  font-weight: 600;
   line-height: 1.28;
 }
 
@@ -302,6 +307,7 @@ label small.is-empty,
 .delivery-options strong {
   display: block;
   font-size: 0.88rem;
+  font-weight: 700;
   line-height: 1.16;
 }
 
@@ -309,7 +315,7 @@ label small.is-empty,
   display: block;
   color: var(--color-muted);
   font-size: 0.76rem;
-  font-weight: 650;
+  font-weight: 500;
   line-height: 1.25;
 }
 
@@ -330,7 +336,7 @@ label small.is-empty,
   background: rgba(225, 245, 254, 0.5);
   color: var(--color-muted);
   font-size: 0.86rem;
-  font-weight: 750;
+  font-weight: 650;
 }
 
 .review-check {
@@ -341,7 +347,7 @@ label small.is-empty,
   border-radius: 0.9rem;
   background: rgba(255, 255, 255, 0.62);
   color: var(--color-muted);
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.5;
 }
 
@@ -358,7 +364,7 @@ label small.is-empty,
   width: 100%;
   margin-top: 0.2rem;
   min-height: 3.35rem;
-  font-size: 0.96rem;
+  font-size: var(--text-sm);
   box-shadow: 0 0.9rem 1.9rem rgba(13, 71, 161, 0.2);
 }
 

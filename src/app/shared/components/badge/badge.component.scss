@@ -3,12 +3,12 @@
   align-items: center;
   width: fit-content;
   border-radius: var(--radius-pill);
-  padding: 0.38rem 0.68rem;
+  padding: 0.36rem 0.64rem;
   border: 1px solid rgba(255, 255, 255, 0.42);
   box-shadow: 0 0.5rem 1rem rgba(13, 71, 161, 0.1);
-  font-size: 0.68rem;
-  font-weight: 850;
-  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+  font-weight: 780;
+  letter-spacing: var(--tracking-label);
   line-height: 1;
   text-transform: uppercase;
 }

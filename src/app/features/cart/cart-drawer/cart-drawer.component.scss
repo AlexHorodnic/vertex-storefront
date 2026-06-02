@@ -49,8 +49,8 @@
   margin: 0 0 0.38rem;
   color: var(--color-accent);
   font-size: 0.72rem;
-  font-weight: 900;
-  letter-spacing: 0.12em;
+  font-weight: 780;
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
 }
 
@@ -61,9 +61,10 @@ p {
 }
 
 h2 {
-  font-size: 1.65rem;
-  letter-spacing: -0.045em;
-  line-height: 1;
+  font-size: var(--text-xl);
+  font-weight: 740;
+  letter-spacing: var(--tracking-heading);
+  line-height: 1.1;
 }
 
 .cart-drawer__items {
@@ -117,17 +118,19 @@ h2 {
 }
 
 .cart-item h3 {
-  font-size: 1rem;
-  letter-spacing: -0.025em;
-  line-height: 1.18;
+  font-size: var(--text-base);
+  font-weight: 720;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
 }
 
 .cart-item p,
 .cart-note p,
 .cart-item__subtotal span {
   color: var(--color-muted);
-  font-size: 0.86rem;
-  line-height: 1.45;
+  font-size: var(--text-sm);
+  font-weight: 420;
+  line-height: 1.55;
 }
 
 .cart-item__actions,
@@ -149,8 +152,10 @@ h2 {
   color: var(--color-danger);
   cursor: pointer;
   font: inherit;
-  font-size: 0.82rem;
-  font-weight: 850;
+  font-size: var(--text-xs);
+  font-weight: 750;
+  letter-spacing: -0.01em;
+  line-height: 1;
   padding: 0.45rem 0.7rem;
 }
 
@@ -197,8 +202,8 @@ h2 {
   gap: 0.4rem;
   margin-bottom: 0.25rem;
   font-size: 0.74rem;
-  font-weight: 900;
-  letter-spacing: 0.1em;
+  font-weight: 780;
+  letter-spacing: var(--tracking-label);
   text-transform: uppercase;
 }
 
