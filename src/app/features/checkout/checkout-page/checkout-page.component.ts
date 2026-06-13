@@ -17,9 +17,8 @@ import {
   PersistedCheckoutShipping,
 } from '../checkout.models';
 import { CheckoutPersistenceService } from '../services/checkout-persistence.service';
-
-const taxRate = 0.08;
-const expressShipping = 18;
+import { canVisitCheckoutStep } from '../utils/checkout-step.util';
+import { calculateCheckoutTotals } from '../utils/checkout-totals.util';
 
 @Component({
   selector: 'app-checkout-page',
@@ -77,19 +76,11 @@ export class CheckoutPageComponent {
   });
 
   protected readonly totals = computed(() => {
-    const subtotal = this.cartService.totals().subtotal;
-    const discount = Math.min(this.promoDiscount(), subtotal);
-    const taxableSubtotal = Math.max(subtotal - discount, 0);
-    const shipping = this.selectedDelivery() === 'express' ? expressShipping : 0;
-    const tax = Math.round(taxableSubtotal * taxRate);
-
-    return {
-      subtotal,
-      discount,
-      shipping,
-      tax,
-      total: taxableSubtotal + shipping + tax,
-    };
+    return calculateCheckoutTotals(
+      this.cartService.totals().subtotal,
+      this.promoDiscount(),
+      this.selectedDelivery(),
+    );
   });
 
   protected readonly currentStepNumber = computed(() => this.stepIndex(this.currentStep()) + 1);
@@ -156,43 +147,9 @@ export class CheckoutPageComponent {
   }
 
   protected canVisitStep(step: CheckoutStep): boolean {
-    if (step === 'cart' || step === 'shipping') {
-      return true;
-    }
-
-    if (step === 'payment') {
-      return this.stepControlsValid([
-        'email',
-        'phoneCountry',
-        'phoneLocal',
-        'phone',
-        'firstName',
-        'lastName',
-        'address',
-        'city',
-        'postalCode',
-        'country',
-        'deliveryMethod',
-      ]);
-    }
-
-    return this.stepControlsValid([
-      'email',
-      'phoneCountry',
-      'phoneLocal',
-      'phone',
-      'firstName',
-      'lastName',
-      'address',
-      'city',
-      'postalCode',
-      'country',
-      'deliveryMethod',
-      'cardholderName',
-      'cardNumber',
-      'expiry',
-      'cvc',
-    ]);
+    return canVisitCheckoutStep(step, (controlName) =>
+      Boolean(this.checkoutForm.get(controlName)?.valid),
+    );
   }
 
   protected stepState(step: CheckoutStep): string {
@@ -234,10 +191,6 @@ export class CheckoutPageComponent {
 
   private stepIndex(step: CheckoutStep): number {
     return this.checkoutSteps.findIndex((checkoutStep) => checkoutStep.id === step);
-  }
-
-  private stepControlsValid(controlNames: readonly string[]): boolean {
-    return controlNames.every((controlName) => this.checkoutForm.get(controlName)?.valid);
   }
 
   private restoreShippingData(): void {

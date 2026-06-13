@@ -49,7 +49,7 @@ export class CartService {
       );
 
       if (!existing) {
-        return [...items, { product, variantId, quantity }];
+        return [...items, { product, variantId, quantity: Math.min(quantity, product.stock) }];
       }
 
       return items.map((item) =>
@@ -100,7 +100,9 @@ export class CartService {
       .get<readonly PersistedCartItem[]>(cartStorageKey, [], isPersistedCartItems)
       .map((item) => {
         const product = this.productService.getProductById(item.productId);
-        const variant = product?.variants.find((productVariant) => productVariant.id === item.variantId);
+        const variant = product?.variants.find(
+          (productVariant) => productVariant.id === item.variantId,
+        );
 
         if (!product || !variant || product.stock <= 0) {
           return undefined;

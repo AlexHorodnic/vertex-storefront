@@ -1,59 +1,121 @@
-# VertexStorefront
+# Vertex Storefront
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.12.
+[![CI](https://github.com/AlexHorodnic/vertex-storefront/actions/workflows/ci.yml/badge.svg)](https://github.com/AlexHorodnic/vertex-storefront/actions/workflows/ci.yml)
 
-## Development server
+A production-inspired Angular commerce experience connecting product discovery, variant selection,
+persistent cart state, and a responsive four-step checkout.
 
-To start a local development server, run:
+[Live storefront](https://vertex-storefront.alexhorodnic.com/) |
+[Portfolio case study](https://alexhorodnic.com/projects/vertex-storefront)
+
+![Vertex Storefront homepage](docs/screenshots/storefront-overview.png)
+
+## Product Scope
+
+Vertex models a complete frontend buying journey across:
+
+- 40 typed demo products in 10 focused categories
+- search, category, collection, price, and sorting controls
+- responsive desktop filters and a mobile filter sheet
+- product variants, stock states, image galleries, and related products
+- persistent cart quantities with stock-safe updates
+- promo codes, shipping methods, tax, discounts, and order totals
+- a validated cart, shipping, payment, and review checkout flow
+- mobile checkout progress and a sticky action bar
+
+The checkout is a demo. It does not process payments, and card fields are deliberately excluded
+from browser persistence.
+
+## Engineering Decisions
+
+### Feature-first Angular structure
+
+Route features own page-level behavior, while core services and shared standalone components handle
+reusable commerce state and UI. Home, catalog, product detail, and checkout routes are lazy-loaded.
+
+### Signals for derived commerce state
+
+Angular signals and computed values keep cart count, subtotal, promo discount, delivery cost, tax,
+and final totals synchronized without duplicating derived values.
+
+### Guarded browser persistence
+
+Runtime type guards validate cart items, catalog filters, variant selections, and checkout shipping
+data before stored JSON re-enters application state. Invalid or stale data falls back safely.
+
+### Checkout continuity with privacy boundaries
+
+Shipping details are saved through a debounced snapshot so customers can recover useful progress.
+Payment fields are never persisted. Later checkout steps remain unavailable until their required
+controls are valid.
+
+## Responsive and Accessible UX
+
+- keyboard-operable dual-handle price filtering
+- desktop pointer and mobile sheet catalog controls
+- product lightbox with keyboard navigation, touch swiping, and scroll locking
+- loading, empty, invalid, disabled, low-stock, and out-of-stock states
+- mobile-specific checkout progress and reachable primary actions
+- labelled controls, visible focus states, semantic landmarks, and touch-friendly targets
+
+## Screenshots
+
+### Desktop storefront
+
+![Vertex product discovery](docs/screenshots/storefront-overview.png)
+
+### Mobile checkout
+
+![Vertex mobile checkout](docs/screenshots/mobile-checkout.png)
+
+## Technology
+
+- Angular 21
+- TypeScript
+- Angular Signals
+- RxJS
+- Reactive Forms
+- SCSS
+- Vitest
+
+## Local Development
+
+Requirements:
+
+- Node.js 24
+- npm 11.6.2
 
 ```bash
-ng serve
+npm ci
+npm start
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Open `http://localhost:4200`.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Verification
 
 ```bash
-ng generate component component-name
+npm run typecheck
+npm run test:ci
+npm run build
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+The test suite covers:
 
-```bash
-ng generate --help
-```
+- cart totals, persistence, removal, and stock limits
+- product search, combined filters, and sorting
+- persisted-data runtime guards
+- checkout shipping persistence
+- checkout totals, discounts, tax, and delivery costs
+- checkout step-access rules
+- lazy route boundaries
 
-## Building
+GitHub Actions runs dependency installation, type checking, all tests, and a production build on
+every push to `main` and on pull requests.
 
-To build the project run:
+## Project Boundaries
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Vertex is a frontend portfolio project. Products are typed mock data, imagery is sourced from
+Unsplash, and checkout simulates order creation. A production system would require inventory and
+pricing APIs, authentication, server-owned carts, payment-provider tokenization, analytics,
+observability, and server-side validation.
